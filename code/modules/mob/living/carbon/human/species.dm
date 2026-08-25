@@ -190,6 +190,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		"+1 INT, +1 WIL" = list(STATKEY_INT = 1, STATKEY_WIL = 1),
 		"+1 PER, +1 CON" = list(STATKEY_PER = 1, STATKEY_CON = 1),
 		"+1 PER, +1 WIL" = list(STATKEY_PER = 1, STATKEY_WIL = 1),
+		"+1 WIL, +1 CON" = list(STATKEY_WIL = 1, STATKEY_CON = 1),
 		"+1 SPD" = STATKEY_SPD,
 		"+1 STR" = STATKEY_STR,
 	)
