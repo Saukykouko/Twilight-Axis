@@ -69,6 +69,7 @@
 	languages = list(/datum/language/common)
 	base_name = "Demonkin"
 	race_bonus = list()
+	custom_selection = list()
 
 /datum/species/aasimar
 	desc_title = "Аасимары"
