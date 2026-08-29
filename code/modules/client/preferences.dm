@@ -37,7 +37,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/key_bindings = list()
 
 	var/tgui_lock = TRUE
-	var/tgui_theme = "azure_default"
+	var/tgui_theme = "azure_gilbranze" // TA EDIT
 	var/parchment_skin = "leatherbound"
 	var/statbrowser_theme = "dark"
 	var/windowflashing = TRUE
