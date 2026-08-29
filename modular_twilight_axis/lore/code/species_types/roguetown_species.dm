@@ -212,8 +212,6 @@
 		"+1 CON" = STATKEY_CON,
 		"+1 WIL" = STATKEY_WIL,
 		"+1 PER" = STATKEY_PER,
-		"+1 STR" = STATKEY_STR,
-		"+1 SPD" = STATKEY_SPD, // Да, ты можешь увеличить скорость, получив минус к скорости, так и живём.
 	)
 
 /datum/species/dwarf/mountain
