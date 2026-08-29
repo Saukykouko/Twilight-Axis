@@ -79,10 +79,7 @@
 	origin_default = /datum/virtue/origin/valorian
 	origin = "Valoria"
 	languages = list(/datum/language/common)
-<<<<<<< Updated upstream
 	blood_color = "#00ffef"
-=======
-	blood_color = "#b98b17"
 	race_bonus = list()
 	custom_selection = list(
 		"+1 FOR, +1 PER" = list(STATKEY_LCK = 1, STATKEY_PER = 1),
@@ -103,7 +100,6 @@
 		"No Hunger & Thirst, +1 WIL" = list(TRAIT_NOHUNGER, STATKEY_WIL = 1),
 		"No Hunger & Thirst, +1 CON" = list(TRAIT_NOHUNGER, STATKEY_CON = 1),
 	)
->>>>>>> Stashed changes
 
 /datum/species/dracon
 	desc_title = "Дракиане"
