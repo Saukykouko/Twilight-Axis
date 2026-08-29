@@ -237,3 +237,6 @@
 
 /datum/species/ooze
 	race_bonus = list()
+
+/datum/species/aura
+	race_bonus = list()
