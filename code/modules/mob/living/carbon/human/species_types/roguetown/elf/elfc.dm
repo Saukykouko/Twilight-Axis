@@ -190,5 +190,15 @@
 /datum/species/elf/sun/random_surname()
 	return " [pick(world.file2list("strings/rt/names/elf/elfwlast.txt"))]"
 
+// TA EDIT START
+// ORIGINAL:
+/*
 /datum/species/elf/sun/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
 	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat of your choosing, OR Astratan Affinity (Tier 0 Miracles, Astrata patron only)"
+*/
+// ORIGINAL END
+
+/datum/species/elf/sun/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
+	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat to 2 stats of your choosing, OR Astratan Affinity (Tier 0 Miracles, Astrata patron only) and +1 stat"
+
+// TA EDIT END

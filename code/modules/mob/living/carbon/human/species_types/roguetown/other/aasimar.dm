@@ -165,5 +165,15 @@
 /datum/species/aasimar/random_surname()
 	return
 
+// TA EDIT START
+// ORIGINAL:
+/*
 /datum/species/aasimar/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
 	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat of your choosing, OR No Hunger & Thirst"
+*/
+// ORIGINAL END
+
+/datum/species/aasimar/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
+	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat to 2 stats of your choosing, OR No Hunger & Thirst and +1 stat"
+
+// TA EDIT END
