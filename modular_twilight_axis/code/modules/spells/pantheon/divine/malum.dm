@@ -420,7 +420,7 @@
 	antimagic_allowed = TRUE
 	recharge_time = 2 MINUTES
 	miracle = TRUE
-	devotion_cost = 100
+	devotion_cost = 50
 
 /obj/effect/proc_holder/spell/invoked/TAmalum_inspiration/cast(list/targets, mob/user = usr)
 	. = ..()
@@ -430,14 +430,17 @@
 			to_chat(user, span_notice("They have been blessed by Malum already."))
 			revert_cast(user)
 			return FALSE
-
+		if(H.stat == DEAD)
+			to_chat(user, span_notice("They are dead."))
+			revert_cast(user)
+			return FALSE
 		var/associated_skill_level = H.get_skill_level(associated_skill)
 		H.apply_status_effect(/datum/status_effect/buff/TAmalum_inspiration, associated_skill_level)
 
 /datum/status_effect/buff/TAmalum_inspiration
 	id = "malum_inspiration"
 	alert_type = /atom/movable/screen/alert/status_effect/malum_inspiration
-	effectedstats = list(STATKEY_WIL = 2,STATKEY_INT = 3,STATKEY_CON = -2,STATKEY_PER = -2) // It's kind of harmful to work so much time!
+	effectedstats = list(STATKEY_WIL = 3,STATKEY_INT = 4,STATKEY_CON = -2,STATKEY_SPD = -1) // It's kind of harmful to work so much time!
 	duration = 1 MINUTES
 
 /datum/status_effect/buff/TAmalum_inspiration/on_creation(mob/living/new_owner, associated_skill_level)
