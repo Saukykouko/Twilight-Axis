@@ -466,8 +466,7 @@ GLOBAL_LIST_INIT(noc_scroll_skills, list(
 	return ..()
 
 /obj/item/book/granter/skill/proc/choose_skill(mob/living/user)
-	var/list/current_list = list(GLOB.noc_scroll_skills)
-	var/choice = tgui_input_list(user, "Choose your skill", "Skill", current_list)
+	var/choice = tgui_input_list(user, "Choose your skill", "Skill", GLOB.noc_scroll_skills)
 	currently_choosing = TRUE
 	if(!choice || QDELETED(src))
 		currently_choosing = FALSE
@@ -476,7 +475,7 @@ GLOBAL_LIST_INIT(noc_scroll_skills, list(
 		to_chat(user, span_warning("You’ve already writen this skill..."))
 		return FALSE
 
-	var/datum/skill/choosen_skill = current_list[choice]
+	var/datum/skill/choosen_skill = GLOB.noc_scroll_skills[choice]
 	return choose_slot_for_skill(user, choosen_skill)
 
 /obj/item/book/granter/skill/proc/choose_slot_for_skill(mob/living/user, datum/skill/choosen_skill)
