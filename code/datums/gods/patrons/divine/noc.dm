@@ -14,7 +14,6 @@
 					/datum/action/cooldown/spell/noc/spellpack					= CLERIC_T3,
 					/datum/action/cooldown/spell/noc/moonlight					= CLERIC_T4,
 					/obj/effect/proc_holder/spell/invoked/resurrect/noc			= CLERIC_T4,
-					/datum/action/cooldown/spell/noc/grimoire					= CLERIC_T4
 	)
 	confess_lines = list(
 		"NOC IS NIGHT!",
