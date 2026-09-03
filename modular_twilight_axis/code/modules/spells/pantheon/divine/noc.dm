@@ -164,7 +164,7 @@
 	invocations = list("Good nite.")
 
 	charge_required = FALSE
-	cooldown_time = 30 MINUTES
+	cooldown_time = 25 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
@@ -369,15 +369,14 @@
 	desc = "You create a scroll, which you need to fill with three skills of your choice. \
 			You do not need to know these skills, and you too can read this scroll. \
 			Anyone who reads this scroll will increase the skill levels of these skills up to Journeyman. \
-			Each person cannot read more than one scroll. \
-			To read this scroll, you don't need to know how to read."
+			Each person cannot read more than one scroll."
 	button_icon_state = "noc"
 	click_to_activate = FALSE
 	primary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY*2
 	secondary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY
 	invocation_type = INVOCATION_SHOUT
 	invocations = list("Deepest dreaming, scribe!")
-	cooldown_time = 10 MINUTES
+	cooldown_time = 15 MINUTES
 	charge_required = FALSE
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
@@ -449,6 +448,15 @@ GLOBAL_LIST_INIT(noc_scroll_skills, list(
 	var/datum/skill/third_skill
 	var/currently_choosing = FALSE
 
+/obj/item/book/granter/skill/examine(mob/user)
+	. = ..()
+	if(first_skill)
+		. += span_info("First skill that this scroll teaches is [first_skill.name]")
+	if(second_skill)
+		. += span_info("Secon skill that this scroll teaches is [second_skill.name]")
+	if(third_skill)
+		. += span_info("Third skill that this scroll teaches is [third_skill.name]")
+
 /obj/item/book/granter/skill/attack_self(mob/living/user)
 	if(!first_skill || !second_skill || !third_skill)
 		if(currently_choosing)
@@ -490,6 +498,7 @@ GLOBAL_LIST_INIT(noc_scroll_skills, list(
 		if("Third Scroll Skill")
 			third_skill = choosen_skill
 	currently_choosing = FALSE
+
 	return TRUE
 
 /obj/item/book/granter/skill/already_known(mob/user)
