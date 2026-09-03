@@ -471,9 +471,6 @@ GLOBAL_LIST_INIT(noc_scroll_skills, list(
 	if(!choice || QDELETED(src))
 		currently_choosing = FALSE
 		return FALSE
-	if(choice == first_skill || choice == second_skill || choice == third_skill)
-		to_chat(user, span_warning("You’ve already writen this skill..."))
-		return FALSE
 
 	var/datum/skill/choosen_skill = GLOB.noc_scroll_skills[choice]
 	return choose_slot_for_skill(user, choosen_skill)
@@ -491,11 +488,20 @@ GLOBAL_LIST_INIT(noc_scroll_skills, list(
 
 	switch(choice)
 		if("First Scroll Skill")
-			first_skill = choosen_skill
+			if(choosen_skill != second_skill && choosen_skill != third_skill)
+				first_skill = choosen_skill
+			else
+				to_chat(user, span_warning("It seems you’ve already writen this skill."))
 		if("Second Scroll Skill")
-			second_skill = choosen_skill
+			if(choosen_skill != first_skill && choosen_skill != third_skill)
+				second_skill = choosen_skill
+			else
+				to_chat(user, span_warning("It seems you’ve already writen this skill."))
 		if("Third Scroll Skill")
-			third_skill = choosen_skill
+			if(choosen_skill != second_skill && choosen_skill != first_skill)
+				third_skill = choosen_skill
+			else
+				to_chat(user, span_warning("It seems you’ve already writen this skill."))
 	currently_choosing = FALSE
 
 	return TRUE
