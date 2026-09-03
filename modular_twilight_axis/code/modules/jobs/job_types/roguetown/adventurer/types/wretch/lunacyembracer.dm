@@ -5,12 +5,10 @@
 	Clergy of Azuria assume you are a radical dendorite and rejected you, your connection with Treefather is weaken but you will serve him whatever it takes."
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT)
-	min_pq = 40
 	maximum_possible_slots = 1
 	outfit = /datum/outfit/job/roguetown/wretch/lunacyembracer
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_CLERIC
-	extra_context = "Minimum PQ Required: 40"
 	subclass_languages = list(/datum/language/beast)
 
 	traits_applied = list(
