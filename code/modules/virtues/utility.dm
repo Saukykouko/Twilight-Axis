@@ -135,7 +135,7 @@
 	max_choices = 4
 	choice_costs = list(0, 0, 2, 4)
 	extra_choices = list(
-	SOCIALITE_MASSAGE,
+//	SOCIALITE_MASSAGE,
 	SOCIALITE_NUTCRACKER,
 	SOCIALITE_EMPATH,
 	"Cookies" = /obj/item/reagent_containers/food/snacks/rogue/cookie,
@@ -163,9 +163,9 @@
 	recipient.mind.special_items["Hand Mirror"] = /obj/item/handmirror
 	for(var/choice in picked_choices)
 		switch(choice)
-			if(SOCIALITE_MASSAGE)
-				if(recipient.mind)
-					recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
+		//	if(SOCIALITE_MASSAGE)
+		//		if(recipient.mind)
+		//			recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			if(SOCIALITE_NUTCRACKER)
 				ADD_TRAIT(recipient, TRAIT_NUTCRACKER, TRAIT_VIRTUE)
 			if(SOCIALITE_EMPATH)

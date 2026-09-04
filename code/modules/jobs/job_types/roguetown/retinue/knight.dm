@@ -576,6 +576,7 @@
 
 			if("Shamshir + Pistol") //TA EDIT START
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
+				l_hand = /obj/item/twilight_powderflask
 				backl = /obj/item/rogueweapon/scabbard/sword
 				beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				beltl = /obj/item/quiver/twilight_bullet/lead
@@ -583,11 +584,11 @@
 				backpack_contents = list(
 					/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 					/obj/item/rope/chain = 1,
-					/obj/item/rogueweapon/scabbard/sheath/noble = 1,
-					/obj/item/twilight_powderflask = 1)
+					/obj/item/rogueweapon/scabbard/sheath/noble = 1)
 
 			if("Rapier + Pistol")
 				r_hand = /obj/item/rogueweapon/sword/rapier
+				l_hand = /obj/item/twilight_powderflask
 				backl = /obj/item/rogueweapon/scabbard/sword/noble
 				beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				beltl = /obj/item/quiver/twilight_bullet/lead
@@ -595,8 +596,7 @@
 				backpack_contents = list(
 					/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 					/obj/item/rope/chain = 1,
-					/obj/item/rogueweapon/scabbard/sheath/noble = 1,
-					/obj/item/twilight_powderflask = 1) //TA EDIT END
+					/obj/item/rogueweapon/scabbard/sheath/noble = 1) //TA EDIT END
 
 		switch(armor_choice)
 			if("Light Armor")
