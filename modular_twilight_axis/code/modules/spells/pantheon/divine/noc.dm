@@ -4,46 +4,57 @@
 
 /datum/action/cooldown/spell/noc/TAsight
 	name = "Noc's Gaze"
-	desc = "Peer ahead. (Use MMB to project your vision as if you had a very high perception.)"
+	desc = "Noc grants you or your target Arcane Vision, allowing to see farther and react faster. \
+	Scales with holy skill and grows much more effective at nite."
 	button_icon_state = "noc_sight"
 	glow_intensity = GLOW_INTENSITY_LOW
 	click_to_activate = TRUE
-	cast_range = SPELL_RANGE_GROUND
-	self_cast_possible = FALSE
+	self_cast_possible = TRUE
+	cast_range = SPELL_RANGE_AURA
 	primary_resource_cost = SPELLCOST_CANTRIP
 	secondary_resource_cost = SPELLCOST_CANTRIP
 	invocation_type = INVOCATION_WHISPER
-	invocations = list("Noc guide my gaze.")
+	invocations = list("Noc guides our gaze.")
 	charge_required = FALSE
-	cooldown_time = 5 SECONDS
+	cooldown_time = 1 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 /datum/action/cooldown/spell/noc/TAsight/cast(atom/cast_on)
 	. = ..()
-	if(isturf(cast_on) && ishuman(owner))
-		var/mob/living/carbon/human/H = owner
-		var/turf/T = cast_on
-		var/_x = T.x-H.loc.x
-		var/_y = T.y-H.loc.y
-		var/ttime = 6
-		var/dist = get_dist(H, T)
-		if(dist > 7 || dist  <= 2)
-			return
-		H.hide_cone()
-		var/offset = 5
-		if(_x > 0)
-			_x += offset
-		else if(_x != 0)
-			_x -= offset
-		if(_y > 0)
-			_y += offset
-		else if(_y != 0)
-			_y -= offset
-		animate(H.client, pixel_x = world.icon_size*_x, pixel_y = world.icon_size*_y, ttime)
-		H.update_cone_show()
-		return TRUE
-	return FALSE
+	var/mob/living/spelltarget = cast_on
+	if(!isliving(spelltarget))
+		return FALSE
+	if(!spelltarget.mind)
+		to_chat(owner, span_warning("The target's mind is too simple for Noc's Gaze!"))
+		return FALSE
+	if(spelltarget.has_status_effect(/datum/status_effect/buff/TAnoc_gaze))
+		to_chat(owner, span_warning("The target already has Arcane Vision."))
+		return FALSE
+	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_gaze, associated_skill)
+	return TRUE
+
+/atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
+	name = "Arcane Vision"
+	desc = "Arcane Vision is boosting my eyes."
+	icon_state = "enlightenment"
+
+/datum/status_effect/buff/TAnoc_gaze
+	id = "noc_gaze"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
+	duration = 1.5 MINUTES
+
+/datum/status_effect/buff/TAnoc_gaze/on_creation(mob/living/new_owner, effect)
+	var/per_bonus = effect
+	var/lck_bonus = 2
+	if(GLOB.tod == "day" || GLOB.tod == "dawn")
+		to_chat(owner, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (50% of ability duration, -per & -lck.)"))
+		per_bonus--
+		lck_bonus--
+		duration *= 0.5
+	if(per_bonus > 0)
+		effectedstats = list(STATKEY_PER = per_bonus, STATKEY_LCK = lck_bonus)
+	. = ..()
 
 /////////////////////////
 // T0 - Nitesight. //////
@@ -78,7 +89,7 @@
 	secondary_resource_cost = SPELLCOST_STAT_BUFF
 
 	invocation_type = INVOCATION_SHOUT
-	invocations = list("His gaze upon me...!", "I beseech the stars; show me truth!")
+	invocations = list("Her gaze upon me...!", "I beseech the stars; show me truth!")
 
 	charge_required = TRUE
 	charge_time = 1 SECONDS
@@ -200,7 +211,7 @@
 
 /datum/action/cooldown/spell/noc/TAblindness
 	name = "Blindness"
-	desc = "Direct a mote of living darkness to temporarily blind another. \n(-3 PERCEPTION, BLINDNESS)"
+	desc = "Direct a mote of living darkness to temporarily blind another. \n(-3 PERCEPTION, SHORT BLINDNESS)"
 	button_icon_state = "blindness"
 	sound = 'sound/magic/churn.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
@@ -232,6 +243,8 @@
 		cast_on.visible_message(span_warning("[owner] points at [cast_on]'s eyes!"), span_userdanger("[owner] points at my eyes! Shadowy fingers are digging into my vision-- I can't SEE!"))
 		spelltarget.apply_status_effect(/datum/status_effect/debuff/TAblindness, assocskill)
 		spelltarget.flash_act()
+		if(!spelltarget.mind)
+			spelltarget.Immobilize(5 SECONDS)
 		return TRUE
 	else
 		return FALSE
@@ -264,7 +277,7 @@
 /datum/action/cooldown/spell/noc/TAmoonscorch
 	name = "Moonscorch"
 	desc = "Calls down shimmering moonlight onto those around you in a certain radius, scaling with holy skill. \
-	Mindless creachers will become critically weak. Simple creachers will burn. \
+	Mindless creachers will start to burn. \
 	Does not work during dae nor dawn."
 	button_icon_state = "moon_light"
 	sound = 'sound/magic/churn.ogg'
@@ -279,7 +292,7 @@
 	secondary_resource_cost = SPELLCOST_MIRACLE
 
 	invocation_type = INVOCATION_SHOUT
-	invocations = list("YOUR TRUE FORM REVEALED!!")
+	invocations = list("YOUR TRUE FORM REVEALED!!", "THERE IS NO PLACE TO HIDE!!")
 
 	charge_required = TRUE
 	charge_time = 1 SECONDS
@@ -292,7 +305,7 @@
 /datum/action/cooldown/spell/noc/TAmoonscorch/cast(atom/cast_on)
 	. = ..()
 
-	if(GLOB.tod == "day" || GLOB.tod == "dawn")
+	if(GLOB.tod == "day")
 		to_chat(owner, span_warning("ASTRATA IS RISEN! MY SPELL FIZZLES!"))
 		return FALSE
 	var/checkrange = (cast_range + owner.get_skill_level(/datum/skill/magic/holy)) //+1 range per holy skill up to a potential of 8.
@@ -301,7 +314,7 @@
 			continue
 		var/target_turf = get_turf(M)
 		new /obj/effect/temp_visual/TAmoon(target_turf)
-		M.apply_status_effect(/datum/status_effect/light_buff/TAmoon, 1)
+		M.apply_status_effect(/datum/status_effect/light_buff/TAmoon, 4)
 	return TRUE
 
 /obj/effect/temp_visual/TAmoon
@@ -315,19 +328,15 @@
 	id = "moon_light_buff"
 	alert_type = /atom/movable/screen/alert/status_effect/light_buff
 	duration = 15 SECONDS//This is geniunely permanent, I guess dude?
-	color_mob_light = "#3936eacf"
+	color_mob_light = "#3a9399cf"
+	outline_colour = "#3c3a99cf"
 
 /datum/status_effect/light_buff/TAmoon/on_apply()
-	..()
 	if(!owner.mind) //PVE stuff.
-		if(HAS_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS)) //skeletons...
-			return
-		ADD_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, TRAIT_MIRACLE)
-
-/datum/status_effect/light_buff/TAmoon/tick()
-	if(!owner.mind || istype(owner, /mob/living/simple_animal)) //AI mobs take 3 burn damage per tick. 45 burn without 15 seconds.
-		var/mob/living/target = owner
-		target.adjustFireLoss(3)
+		owner.adjust_fire_stacks(4, /datum/status_effect/fire_handler/fire_stacks/divine)
+		owner.ignite_mob()
+		owner.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
+	return ..()
 
 /datum/action/cooldown/spell/noc/spellpack
 	desc = "Allows you to learn a set of spells. \n \
