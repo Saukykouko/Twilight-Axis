@@ -1,11 +1,23 @@
+/////////////////////////
+// T0 - Nitesight. //////
+/////////////////////////
+
+/datum/action/cooldown/spell/darkvision/miracle
+	name = "Nitesight"
+	background_icon = 'icons/mob/actions/nocmiracles.dmi'
+	invocations = list("Noc, grant me clarity.") //Nachtsicht. Night Sight
+	button_icon_state = "darkvision"
+	point_cost = 0
+	spell_tier = 0
+	associated_skill = null
+
 /////////////////////
-// T0 - Noc Sight. //
+// T1 - Noc Gaze. //
 /////////////////////
 
-/datum/action/cooldown/spell/noc/TAsight
-	name = "Noc's Gaze"
-	desc = "Noc grants you or your target Arcane Vision, allowing to see farther and react faster. \
-	Scales with holy skill and grows much more effective at nite."
+/datum/action/cooldown/spell/noc/TAbless
+	name = "Noc's Bless"
+	desc = "Noc grants a powerful blessing upon the chosen target, which enhances all stats except for fortune."
 	button_icon_state = "noc_sight"
 	glow_intensity = GLOW_INTENSITY_LOW
 	click_to_activate = TRUE
@@ -20,64 +32,36 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-/datum/action/cooldown/spell/noc/TAsight/cast(atom/cast_on)
+/datum/action/cooldown/spell/noc/TAbless/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/spelltarget = cast_on
 	if(!isliving(spelltarget))
+		to_chat(owner, span_warning("Must be living!"))
 		return FALSE
 	if(!spelltarget.mind)
-		to_chat(owner, span_warning("The target's mind is too simple for Noc's Gaze!"))
+		to_chat(owner, span_warning("The target's mind is too simple for Noc's Bless!"))
 		return FALSE
-	if(spelltarget.has_status_effect(/datum/status_effect/buff/TAnoc_gaze))
-		to_chat(owner, span_warning("The target already has Arcane Vision."))
+	if(spelltarget.has_status_effect(/datum/status_effect/buff/TAnoc_bless))
+		to_chat(owner, span_warning("The target already has Blessing."))
 		return FALSE
-	var/skill_level = spelltarget.get_skill_level(associated_skill)
-	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_gaze, skill_level)
+	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_bless)
 	return TRUE
 
-/atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
-	name = "Arcane Vision"
-	desc = "Arcane Vision is boosting my eyes."
+/atom/movable/screen/alert/status_effect/buff/TAnoc_bless
+	name = "Noc's Bless"
+	desc = "Noc's blessing grants me everything I need to move forward."
 	icon_state = "enlightenment"
 
-/datum/status_effect/buff/TAnoc_gaze
-	id = "noc_gaze"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
-	duration = 1.5 MINUTES
+/datum/status_effect/buff/TAnoc_bless
+	id = "noc_bless"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_bless
+	duration = 1 MINUTES
+	effectedstats = list(STATKEY_STR = 1,STATKEY_SPD = 1,STATKEY_CON = 1,STATKEY_PER = 1,STATKEY_WIL = 1,STATKEY_INT = 1)
 
-/datum/status_effect/buff/TAnoc_gaze/on_creation(mob/living/new_owner, assocskill)
-	var/per_bonus = 0
-	if(assocskill)
-		per_bonus = 2
-		if(assocskill >= 4)
-			per_bonus = 3
-	if(GLOB.tod == "night")
-		if(assocskill <= 2)
-			per_bonus = 3
-		else
-			per_bonus = assocskill
-		duration *= 2
-	if(GLOB.tod == "day")
-		to_chat(owner, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (-1 TO STAT BOOST.)"))
-		per_bonus--
-	if(per_bonus > 0 && (GLOB.tod == "night" || GLOB.tod == "dusk"))
-		effectedstats = list(STATKEY_PER = per_bonus,STATKEY_LCK = 2)
-	else if (per_bonus > 0 && (GLOB.tod == "dawn" || GLOB.tod == "day"))
-		effectedstats = list(STATKEY_PER = per_bonus)
+/datum/status_effect/buff/TAnoc_bless/on_creation(mob/living/new_owner)
+	if(GLOB.tod != "day" && GLOB.tod != "dawn")
+		duration *= 1.5
 	. = ..()
-
-/////////////////////////
-// T0 - Nitesight. //////
-/////////////////////////
-
-/datum/action/cooldown/spell/darkvision/miracle
-	name = "Nitesight"
-	background_icon = 'icons/mob/actions/nocmiracles.dmi'
-	invocations = list("Noc, grant me clarity.") //Nachtsicht. Night Sight
-	button_icon_state = "darkvision"
-	point_cost = 0
-	spell_tier = 0
-	associated_skill = null
 
 /////////////////////////
 // T1 - Enlightenment. //

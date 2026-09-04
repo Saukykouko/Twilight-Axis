@@ -102,10 +102,10 @@
 	desc = "Богиня знаний, ночи, Луны, и тайн. Первая владыка Арканы. Нок сестра-близнец перворожденной Астраты. Увидав впервые Луну, она нарекла её своим владением, и каждый раз возносит ее в небеса над Гриморией, чтобы осветить темную ночь для тех кто следует ей."
 	worshippers = "Жрецы Патриархата Двергейла, маги, ученые, писцы, амбициозные личности, исследователи."
 	miracles = list(/datum/action/cooldown/spell/touch/orison				= CLERIC_ORI,
-					/datum/action/cooldown/spell/noc/TAsight				= CLERIC_T0,
 					/datum/action/cooldown/spell/darkvision/miracle			= CLERIC_T0,
 					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
+					/datum/action/cooldown/spell/noc/TAbless				= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/TAenlightenment		= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/TAinspiration			= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
