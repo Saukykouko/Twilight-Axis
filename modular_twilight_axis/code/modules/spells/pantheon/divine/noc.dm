@@ -31,7 +31,8 @@
 	if(spelltarget.has_status_effect(/datum/status_effect/buff/TAnoc_gaze))
 		to_chat(owner, span_warning("The target already has Arcane Vision."))
 		return FALSE
-	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_gaze, associated_skill)
+	var/skill_level = spelltarget.get_skill_level(associated_skill)
+	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_gaze, skill_level)
 	return TRUE
 
 /atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
@@ -44,16 +45,25 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
 	duration = 1.5 MINUTES
 
-/datum/status_effect/buff/TAnoc_gaze/on_creation(mob/living/new_owner, effect)
-	var/per_bonus = effect
-	var/lck_bonus = 2
-	if(GLOB.tod == "day" || GLOB.tod == "dawn")
-		to_chat(owner, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (50% of ability duration, -per & -lck.)"))
+/datum/status_effect/buff/TAnoc_gaze/on_creation(mob/living/new_owner, assocskill)
+	var/per_bonus = 0
+	if(assocskill)
+		per_bonus = 2
+		if(assocskill >= 4)
+			per_bonus = 3
+	if(GLOB.tod == "night")
+		if(assocskill <= 2)
+			per_bonus = 3
+		else
+			per_bonus = assocskill
+		duration *= 2
+	if(GLOB.tod == "day")
+		to_chat(owner, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (-1 TO STAT BOOST.)"))
 		per_bonus--
-		lck_bonus--
-		duration *= 0.5
-	if(per_bonus > 0)
-		effectedstats = list(STATKEY_PER = per_bonus, STATKEY_LCK = lck_bonus)
+	if(per_bonus > 0 && (GLOB.tod == "night" || GLOB.tod == "dusk"))
+		effectedstats = list(STATKEY_PER = per_bonus,STATKEY_LCK = 2)
+	else if (per_bonus > 0 && (GLOB.tod == "dawn" || GLOB.tod == "day"))
+		effectedstats = list(STATKEY_PER = per_bonus)
 	. = ..()
 
 /////////////////////////
