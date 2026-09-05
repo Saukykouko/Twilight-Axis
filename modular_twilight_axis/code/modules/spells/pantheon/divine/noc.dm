@@ -12,7 +12,8 @@
 
 /datum/action/cooldown/spell/noc/TAbless
 	name = "Noc's Bless"
-	desc = "Noc grants a powerful blessing upon the chosen target, which increases the stats depending on the time of dae."
+	desc = "Noc grants a powerful blessing upon the chosen target, which increases the stats depending on the time of dae... Or nite. \n\
+		becomes better if caster has Tier 4 miracles."
 	button_icon_state = "noc_sight"
 	glow_intensity = GLOW_INTENSITY_LOW
 	click_to_activate = TRUE
@@ -39,7 +40,10 @@
 	if(spelltarget.has_status_effect(/datum/status_effect/buff/TAnoc_bless))
 		to_chat(owner, span_warning("The target already has Blessing."))
 		return FALSE
-	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_bless)
+
+	var/mob/living/carbon/human/H = owner
+	var/datum/devotion/D = H.devotion
+	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_bless, D)
 	return TRUE
 
 /atom/movable/screen/alert/status_effect/buff/TAnoc_bless
@@ -52,18 +56,36 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_bless
 	duration = 1 MINUTES
 
-/datum/status_effect/buff/TAnoc_bless/on_creation(mob/living/new_owner)
+/datum/status_effect/buff/TAnoc_bless/on_creation(mob/living/new_owner, datum/devotion/our_devotion)
 	if(GLOB.tod == "day")
-		effectedstats = list(STATKEY_STR = 2,STATKEY_CON = 2,STATKEY_SPD = 1)
-		duration *= 0.9
+		if(our_devotion.level == CLERIC_T4)
+			effectedstats = list(STATKEY_STR = 3,STATKEY_CON = 2,STATKEY_SPD = 2)
+		else
+			effectedstats = list(STATKEY_STR = 2,STATKEY_CON = 2,STATKEY_SPD = 1)
+			duration *= 0.9
+
 	else if(GLOB.tod == "dawn")
-		effectedstats = list(STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_WIL = 1)
+		if(our_devotion.level == CLERIC_T4)
+			effectedstats = list(STATKEY_SPD = 3,STATKEY_PER = 2,STATKEY_WIL = 2)
+			duration *= 1.1
+		else
+			effectedstats = list(STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_WIL = 1)
+
 	else if(GLOB.tod == "dusk")
-		effectedstats = list(STATKEY_WIL = 2,STATKEY_STR = 2,STATKEY_PER = 1)
-		duration *= 1.25
+		if(our_devotion.level == CLERIC_T4)
+			effectedstats = list(STATKEY_WIL = 3,STATKEY_STR = 2,STATKEY_PER = 2)
+			duration *= 1.35
+		else
+			effectedstats = list(STATKEY_WIL = 2,STATKEY_STR = 2,STATKEY_PER = 1)
+			duration *= 1.25
+
 	else if(GLOB.tod == "night")
-		effectedstats = list(STATKEY_WIL = 2,STATKEY_INT = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
-		duration *= 1.5
+		if(our_devotion.level == CLERIC_T4)
+			effectedstats = list(STATKEY_WIL = 3,STATKEY_INT = 3,STATKEY_PER = 2,STATKEY_LCK = 2)
+			duration *= 1.75
+		else
+			effectedstats = list(STATKEY_WIL = 2,STATKEY_INT = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
+			duration *= 1.5
 	. = ..()
 
 /////////////////////////
