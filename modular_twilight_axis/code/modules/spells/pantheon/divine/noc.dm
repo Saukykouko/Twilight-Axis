@@ -3,7 +3,7 @@
 /////////////////////////
 
 /datum/action/cooldown/spell/noc/nitevision
-	button_icon = 'icons/mob/actions/mage_augmentatio.dmi'
+	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "darkvision"
 
 /////////////////////
