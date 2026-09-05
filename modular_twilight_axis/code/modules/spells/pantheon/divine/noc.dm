@@ -2,14 +2,9 @@
 // T0 - Nitesight. //////
 /////////////////////////
 
-/datum/action/cooldown/spell/darkvision/miracle
-	name = "Nitesight"
-	background_icon = 'icons/mob/actions/nocmiracles.dmi'
-	invocations = list("Noc, grant me clarity.") //Nachtsicht. Night Sight
+/datum/action/cooldown/spell/noc/nitevision
+	button_icon = 'icons/mob/actions/mage_augmentatio.dmi'
 	button_icon_state = "darkvision"
-	point_cost = 0
-	spell_tier = 0
-	associated_skill = null
 
 /////////////////////
 // T1 - Noc Gaze. //
