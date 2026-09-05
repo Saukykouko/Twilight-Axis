@@ -17,7 +17,7 @@
 
 /datum/action/cooldown/spell/noc/TAbless
 	name = "Noc's Bless"
-	desc = "Noc grants a powerful blessing upon the chosen target, which enhances all stats except for fortune."
+	desc = "Noc grants a powerful blessing upon the chosen target, which increases the stats depending on the time of dae."
 	button_icon_state = "noc_sight"
 	glow_intensity = GLOW_INTENSITY_LOW
 	click_to_activate = TRUE
@@ -56,10 +56,18 @@
 	id = "noc_bless"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_bless
 	duration = 1 MINUTES
-	effectedstats = list(STATKEY_STR = 1,STATKEY_SPD = 1,STATKEY_CON = 1,STATKEY_PER = 1,STATKEY_WIL = 1,STATKEY_INT = 1)
 
 /datum/status_effect/buff/TAnoc_bless/on_creation(mob/living/new_owner)
-	if(GLOB.tod != "day" && GLOB.tod != "dawn")
+	if(GLOB.tod == "day")
+		effectedstats = list(STATKEY_STR = 2,STATKEY_CON = 2,STATKEY_SPD = 1)
+		duration *= 0.9
+	else if(GLOB.tod == "dawn")
+		effectedstats = list(STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_WIL = 1)
+	else if(GLOB.tod == "dusk")
+		effectedstats = list(STATKEY_WIL = 2,STATKEY_STR = 2,STATKEY_PER = 1)
+		duration *= 1.25
+	else if(GLOB.tod == "night")
+		effectedstats = list(STATKEY_WIL = 2,STATKEY_INT = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
 		duration *= 1.5
 	. = ..()
 
@@ -361,187 +369,6 @@
 		/datum/action/cooldown/spell/augment_buff/fortitude,
 		/datum/action/cooldown/spell/mindlink,
 	)
-
-
-////////////////////////
-// T3 - Noc's Secret. //
-////////////////////////
-
-/datum/action/cooldown/spell/noc/grimoire
-	name = "Noc's Secret"
-	desc = "You create a scroll, which you need to fill with three skills of your choice. \
-			You do not need to know these skills, and you too can read this scroll. \
-			Anyone who reads this scroll will increase the skill levels of these skills up to Journeyman. \
-			Each person cannot read more than one scroll."
-	button_icon_state = "noc"
-	click_to_activate = FALSE
-	primary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY*2
-	secondary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY
-	invocation_type = INVOCATION_SHOUT
-	invocations = list("Deepest dreaming, scribe!")
-	cooldown_time = 15 MINUTES
-	charge_required = FALSE
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
-
-/datum/action/cooldown/spell/noc/grimoire/cast(atom/cast_on)
-	. = ..()
-	var/mob/living/carbon/human/H = owner
-	new /obj/item/book/granter/skill(H.loc)
-	H.visible_message("[H] kneels his head in prayer, creating an arcane scroll on the ground!")
-	return TRUE
-
-#define TRAIT_NOC_ARCANE_SCROLL_READED "noc_arcane_scroll_readed"
-
-GLOBAL_LIST_INIT(noc_scroll_skills, list(
-	"Knives" = /datum/skill/combat/knives,
-	"Swords" = /datum/skill/combat/swords,
-	"Polearms" = /datum/skill/combat/polearms,
-	"Maces" = /datum/skill/combat/maces,
-	"Axes" = /datum/skill/combat/axes,
-	"Whips & Flails" = /datum/skill/combat/whipsflails,
-	"Archery" = /datum/skill/combat/bows,
-	"Crossbows" = /datum/skill/combat/crossbows,
-	"Wrestling" = /datum/skill/combat/wrestling,
-	"Unarmed" = /datum/skill/combat/unarmed,
-	"Shields" = /datum/skill/combat/shields,
-	"Slings" = /datum/skill/combat/slings,
-	"Staves" = /datum/skill/combat/staves,
-	"Arcyne Armaments" = /datum/skill/combat/arcyne,
-	"Crafting" = /datum/skill/craft/crafting,
-	"Weaponsmithing" = /datum/skill/craft/weaponsmithing,
-	"Armorsmithing" = /datum/skill/craft/armorsmithing,
-	"Blacksmithing" = /datum/skill/craft/blacksmithing,
-	"Smelting" = /datum/skill/craft/smelting,
-	"Carpenty" = /datum/skill/craft/carpentry,
-	"Masonry" = /datum/skill/craft/masonry,
-	"Trapmaking" = /datum/skill/craft/traps,
-	"Engineering" = /datum/skill/craft/engineering,
-	"Cooking" = /datum/skill/craft/cooking,
-	"Sewing" = /datum/skill/craft/sewing,
-	"Skincrafting" = /datum/skill/craft/tanning,
-	"Pottery" = /datum/skill/craft/ceramics,
-	"Alchemy" = /datum/skill/craft/alchemy,
-	"Farming" = /datum/skill/labor/farming,
-	"Mining" = /datum/skill/labor/mining,
-	"Fishing" = /datum/skill/labor/fishing,
-	"Butchering" = /datum/skill/labor/butchering,
-	"Lumberjacking" = /datum/skill/labor/lumberjacking,
-	"Miracles" = /datum/skill/magic/holy,
-	"Arcana" = /datum/skill/magic/arcane,
-	"Athletics" = /datum/skill/misc/athletics,
-	"Climbing" = /datum/skill/misc/climbing,
-	"Literacy" = /datum/skill/misc/reading,
-	"Swimming" = /datum/skill/misc/swimming,
-	"Pickpocketing" = /datum/skill/misc/stealing,
-	"Sneaking" = /datum/skill/misc/sneaking,
-	"Lockpicking" = /datum/skill/misc/lockpicking,
-	"Riding" = /datum/skill/misc/riding,
-	"Music" = /datum/skill/misc/music,
-	"Medicine" = /datum/skill/misc/medicine,
-	"Tracking" = /datum/skill/misc/tracking,
-	"Hunting" = /datum/skill/misc/hunting
-))
-
-/obj/item/book/granter/skill
-	name = "Noc's Arcane Scroll"
-	icon = 'icons/roguetown/items/misc.dmi'
-	icon_state = "scrolldarkred"
-	var/datum/skill/first_skill
-	var/datum/skill/second_skill
-	var/datum/skill/third_skill
-	var/currently_choosing = FALSE
-
-/obj/item/book/granter/skill/examine(mob/user)
-	. = ..()
-	if(first_skill)
-		. += span_info("First skill that this scroll teaches is [first_skill.name]")
-	if(second_skill)
-		. += span_info("Secon skill that this scroll teaches is [second_skill.name]")
-	if(third_skill)
-		. += span_info("Third skill that this scroll teaches is [third_skill.name]")
-
-/obj/item/book/granter/skill/attack_self(mob/living/user)
-	if(!first_skill || !second_skill || !third_skill)
-		if(currently_choosing)
-			return FALSE
-		choose_skill(user)
-		return TRUE
-	return ..()
-
-/obj/item/book/granter/skill/proc/choose_skill(mob/living/user)
-	var/choice = tgui_input_list(user, "Choose your skill", "Skill", GLOB.noc_scroll_skills)
-	currently_choosing = TRUE
-	if(!choice || QDELETED(src))
-		currently_choosing = FALSE
-		return FALSE
-
-	var/datum/skill/choosen_skill = GLOB.noc_scroll_skills[choice]
-	return choose_slot_for_skill(user, choosen_skill)
-
-/obj/item/book/granter/skill/proc/choose_slot_for_skill(mob/living/user, datum/skill/choosen_skill)
-	var/static/list/slots = list(
-		"First Scroll Skill",
-		"Second Scroll Skill",
-		"Third Scroll Skill",
-	)
-	var/choice = tgui_input_list(user, "Choose your slot", "Slots", slots)
-	if(!choice || QDELETED(src))
-		currently_choosing = FALSE
-		return FALSE
-
-	switch(choice)
-		if("First Scroll Skill")
-			if(choosen_skill != second_skill && choosen_skill != third_skill)
-				first_skill = choosen_skill
-			else
-				to_chat(user, span_warning("It seems you’ve already writen this skill."))
-		if("Second Scroll Skill")
-			if(choosen_skill != first_skill && choosen_skill != third_skill)
-				second_skill = choosen_skill
-			else
-				to_chat(user, span_warning("It seems you’ve already writen this skill."))
-		if("Third Scroll Skill")
-			if(choosen_skill != second_skill && choosen_skill != first_skill)
-				third_skill = choosen_skill
-			else
-				to_chat(user, span_warning("It seems you’ve already writen this skill."))
-	currently_choosing = FALSE
-
-	return TRUE
-
-/obj/item/book/granter/skill/already_known(mob/user)
-	var/mob/living/carbon/human/reader = user
-	if(HAS_TRAIT(reader, TRAIT_NOC_ARCANE_SCROLL_READED))
-		to_chat(reader, span_warning("You are not supposed to know any more than this."))
-		return TRUE
-	if(reader.get_skill_level(first_skill) >= 3)
-		to_chat(reader, span_warning("The information in this scroll is of no use to you..."))
-		return TRUE
-	if(reader.get_skill_level(second_skill) >= 3)
-		to_chat(reader, span_warning("The information in this scroll is of no use to you..."))
-		return TRUE
-	if(reader.get_skill_level(third_skill) >= 3)
-		to_chat(reader, span_warning("The information in this scroll is of no use to you..."))
-		return TRUE
-	return FALSE
-
-/obj/item/book/granter/skill/on_reading_start(mob/user)
-	to_chat(user, span_notice("I start reading about secrets of knowledge..."))
-
-/obj/item/book/granter/skill/on_reading_finished(mob/user)
-	to_chat(user, span_notice("The information you received has borne fruit!"))
-	var/mob/living/carbon/human/reader = user
-	reader.adjust_skillrank(first_skill, 1, FALSE)
-	reader.adjust_skillrank(second_skill, 1, FALSE)
-	reader.adjust_skillrank(third_skill, 1, FALSE)
-	ADD_TRAIT(reader, TRAIT_NOC_ARCANE_SCROLL_READED, TRAIT_GENERIC)
-	onlearned()
-
-/obj/item/book/granter/skill/onlearned(mob/user)
-	used = TRUE
-	qdel(src)
-
-#undef TRAIT_NOC_ARCANE_SCROLL_READED
 
 // That's one in fact is not Noc changes, but it’s related to that.
 
