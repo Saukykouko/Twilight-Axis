@@ -22,7 +22,7 @@
 	primary_resource_cost = SPELLCOST_CANTRIP
 	secondary_resource_cost = SPELLCOST_CANTRIP
 	invocation_type = INVOCATION_WHISPER
-	invocations = list("Noc guides our gaze.")
+	invocations = list("Dae and nite, dawn and dusk, Noc will not forget me.")
 	charge_required = FALSE
 	cooldown_time = 1 MINUTES
 
@@ -213,6 +213,8 @@
 			owner.visible_message(span_blue("[owner] draws a glowing blue crescent on [target]\'s forehead!"))
 			to_chat(target, span_blue("My mind flashes with inspiring images of the NOCMOS! My dreams will prove fruitful...!"))
 			target.mind.sleep_adv.sleep_adv_points += H.get_skill_level(associated_skill)
+			target.energy_add(50 * H.get_skill_level(associated_skill))
+			H.energy_add(50 * H.get_skill_level(associated_skill))
 			H.mind.sleep_adv.sleep_adv_points += floor(H.get_skill_level(associated_skill)/2)
 		return TRUE
 	return FALSE
@@ -303,7 +305,7 @@
 	glow_intensity = GLOW_INTENSITY_LOW
 
 	click_to_activate = TRUE
-	cast_range = SPELL_RANGE_AURA
+	cast_range = 2
 	self_cast_possible = FALSE
 
 	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR
@@ -346,13 +348,13 @@
 /datum/status_effect/light_buff/TAmoon
 	id = "moon_light_buff"
 	alert_type = /atom/movable/screen/alert/status_effect/light_buff
-	duration = 15 SECONDS//This is geniunely permanent, I guess dude?
+	duration = 15 SECONDS
 	color_mob_light = "#3a9399cf"
-	outline_colour = "#3c3a99cf"
+	outline_colour = "#3a9999cf"
 
 /datum/status_effect/light_buff/TAmoon/on_apply()
 	if(!owner.mind) //PVE stuff.
-		owner.adjust_fire_stacks(4, /datum/status_effect/fire_handler/fire_stacks/divine)
+		owner.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
 		owner.ignite_mob()
 		owner.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
 	return ..()
