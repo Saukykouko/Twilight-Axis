@@ -13,7 +13,7 @@
 /datum/action/cooldown/spell/noc/TAbless
 	name = "Noc's Bless"
 	desc = "Noc grants a powerful blessing upon the chosen target, which increases the stats depending on the time of dae... Or nite. \n\
-		becomes better if caster has Tier 4 miracles."
+		becomes better if caster has Tier 4 Miracles."
 	button_icon_state = "noc_sight"
 	glow_intensity = GLOW_INTENSITY_LOW
 	click_to_activate = TRUE
@@ -22,7 +22,7 @@
 	primary_resource_cost = SPELLCOST_CANTRIP
 	secondary_resource_cost = SPELLCOST_CANTRIP
 	invocation_type = INVOCATION_WHISPER
-	invocations = list("Dae and nite, dawn and dusk, Noc will not forget me.")
+	invocations = list("Dae and nite, dawn and dusk, Noc will not forget us all.")
 	charge_required = FALSE
 	cooldown_time = 1 MINUTES
 
@@ -62,30 +62,29 @@
 			effectedstats = list(STATKEY_STR = 3,STATKEY_CON = 2,STATKEY_SPD = 2)
 		else
 			effectedstats = list(STATKEY_STR = 2,STATKEY_CON = 2,STATKEY_SPD = 1)
-			duration *= 0.9
+			duration *= 0.75
 
 	else if(GLOB.tod == "dawn")
 		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_SPD = 3,STATKEY_PER = 2,STATKEY_WIL = 2)
-			duration *= 1.1
+			effectedstats = list(STATKEY_SPD = 3,STATKEY_PER = 2,STATKEY_LCK = 2)
+			duration *= 1.25
 		else
-			effectedstats = list(STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_WIL = 1)
+			effectedstats = list(STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
 
 	else if(GLOB.tod == "dusk")
 		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_WIL = 3,STATKEY_STR = 2,STATKEY_PER = 2)
-			duration *= 1.35
+			effectedstats = list(STATKEY_WIL = 3,STATKEY_STR = 2,STATKEY_CON = 2)
+			duration *= 1.75
 		else
-			effectedstats = list(STATKEY_WIL = 2,STATKEY_STR = 2,STATKEY_PER = 1)
-			duration *= 1.25
+			effectedstats = list(STATKEY_WIL = 2,STATKEY_STR = 2,STATKEY_CON = 1)
+			duration *= 1.5
 
 	else if(GLOB.tod == "night")
 		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_WIL = 3,STATKEY_INT = 3,STATKEY_PER = 2,STATKEY_LCK = 2)
-			duration *= 1.75
+			effectedstats = list(STATKEY_WIL = 3,STATKEY_SPD = 3,STATKEY_PER = 2,STATKEY_LCK = 2)
 		else
-			effectedstats = list(STATKEY_WIL = 2,STATKEY_INT = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
-			duration *= 1.5
+			effectedstats = list(STATKEY_WIL = 3,STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
+		duration *= 2
 	. = ..()
 
 /////////////////////////
@@ -139,6 +138,8 @@
 	else
 		H.visible_message("[H] mutters an incantation and they briefly shine green.")
 		spelltarget.apply_status_effect(/datum/status_effect/buff/TAwise_moon, skill_level)
+	if(GLOB.tod == "day")
+		to_chat(H, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (-1 TO STAT BOOST.)"))
 	return TRUE
 
 /atom/movable/screen/alert/status_effect/buff/TAwise_moon
@@ -161,10 +162,9 @@
 		if(assocskill <= 2)
 			int_bonus = 3
 		else
-			int_bonus = assocskill
+			int_bonus = assocskill + 1
 		duration *= 2
 	if(GLOB.tod == "day")
-		to_chat(owner, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (-1 TO STAT BOOST.)"))
 		int_bonus--
 	if(int_bonus > 0)
 		effectedstats = list(STATKEY_INT = int_bonus)
@@ -316,10 +316,10 @@
 	invocations = list("YOUR TRUE FORM REVEALED!!", "THERE IS NO PLACE TO HIDE!!")
 
 	charge_required = TRUE
-	charge_time = 1 SECONDS
+	charge_time = 5 SECONDS
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/holycharging.ogg'
-	cooldown_time = 1 MINUTES
+	cooldown_time = 1.5 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
