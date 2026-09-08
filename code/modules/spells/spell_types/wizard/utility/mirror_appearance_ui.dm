@@ -420,7 +420,15 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 		if(!choice_name || !length(choice_name) || seen_penis_names[choice_name])
 			continue
 		var/organ_type = initial(choice_type:organ_type)
-		var/list/sprite_accessories = initial(choice_type:sprite_accessories)
+		// sprite_accessories is a list var - initial() unreliably returns
+		// it empty via the dynamic path:var syntax (confirmed by debug
+		// log: name/organ_type read fine every time, sprite_accessories
+		// always came back length 0 despite being populated in every
+		// subtype's declaration). Simple scalar vars are fine with
+		// initial(), but a real instance is needed for this one.
+		var/datum/customizer_choice/organ/penis/temp_choice = new choice_type()
+		var/list/sprite_accessories = temp_choice.sprite_accessories
+		qdel(temp_choice)
 		if(!organ_type || !length(sprite_accessories))
 			continue
 		seen_penis_names[choice_name] = TRUE
