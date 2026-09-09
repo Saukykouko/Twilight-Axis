@@ -139,14 +139,14 @@
 	return FALSE
 
 ////////////////////////
-// T1 - Invisibility. //
+// T2 - Invisibility. //
 ////////////////////////
 
 /datum/action/cooldown/spell/noc/invisibility
 	name = "Invisibility"
 
 /////////////////////
-// T1 - Blindness. //
+// T2 - Blindness. //
 /////////////////////
 
 /datum/action/cooldown/spell/noc/TAblindness
@@ -215,7 +215,7 @@
 	to_chat(owner, span_warning("My vision returns...!"))
 
 //////////////////////////
-// T2 - Noc's Enchant. //
+// T3 - Noc's Enchant. //
 /////////////////////////
 
 /datum/action/cooldown/spell/noc/TAbless
