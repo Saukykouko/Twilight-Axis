@@ -250,10 +250,19 @@
 	var/obj/item/enchantmentscroll/scroll_to_spawn
 	var/basic_scroll_chance = 70 - (5 * enchanter.get_skill_level(associated_skill))
 	var/turf/scroll_turf = get_turf(enchanting.loc)
-	if(prob(basic_scroll_chance))
-		possible_enchantments = subtypesof(/obj/item/enchantmentscroll/basic)
+	if(enchanter.devotion?.level >= CLERIC_T4)
+		if(prob(basic_scroll_chance))
+			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/basic)
+		else if(prob(basic_scroll_chance + 10))
+			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/superior)
+		else
+			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/greater)
 	else
-		possible_enchantments = subtypesof(/obj/item/enchantmentscroll/superior)
+		if(prob(basic_scroll_chance))
+			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/basic)
+		else
+			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/superior)
+
 	scroll_to_spawn = pick(possible_enchantments)
 	new scroll_to_spawn(scroll_turf)
 	animate(enchanting, alpha = 0, time = 1 SECONDS)
