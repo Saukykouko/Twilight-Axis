@@ -23,7 +23,8 @@
 	secondary_resource_cost = SPELLCOST_CANTRIP
 	invocation_type = INVOCATION_WHISPER
 	invocations = list("Dae and nite, dawn and dusk, Noc will not forget us all.")
-	charge_required = FALSE
+	charge_required = TRUE
+	charge_time = 2 SECONDS
 	cooldown_time = 1 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
@@ -316,7 +317,7 @@
 	invocations = list("YOUR TRUE FORM REVEALED!!", "THERE IS NO PLACE TO HIDE!!")
 
 	charge_required = TRUE
-	charge_time = 5 SECONDS
+	charge_time = 3 SECONDS
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/holycharging.ogg'
 	cooldown_time = 1.5 MINUTES
@@ -359,35 +360,101 @@
 		owner.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
 	return ..()
 
-/datum/action/cooldown/spell/noc/spellpack
-	desc = "Allows you to learn a set of spells. \n \
-	<b>MAGISTER</b>: Greater Arcyne Bolt, Arc Bolt, Phase, Message, Campfire \n \
-	<b>ENCHANTER</b>: Gravel Blast, Mending, Arcyne Forge, Forcewall, Attune: Hawk, Blood Rush, Conjure Crystalhide Ward. \n \
-	<b>SEER</b>: Attune Giant, Guidance, Attune Haste, Conjure Crystalhide Ward."
+///////////////////////////
+// T3 - Arcyne Affinity. //
+///////////////////////////
 
-	magister_bundle = list(
+/datum/action/cooldown/spell/noc/TAspellpack
+	name = "Arcyne Affinity"
+	desc = "Allows you to learn a set of spells. \n \
+	<b>MAGISTER</b>: Greater Arcyne Bolt, Arc Bolt, Gravel Blast, Basic Offensive Magic \n \
+	<b>CONTROLLER</b>: Frost Bolt, Geas, Gravity, Wither \n \
+	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Mindlink, Create Campfire"
+	button_icon_state = "spellpack"
+	click_to_activate = FALSE
+	primary_resource_cost = SPELLCOST_MIRACLE
+	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
+	invocation_type = INVOCATION_NONE
+	charge_required = FALSE
+	cooldown_time = 5 SECONDS
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+	/// var we use to flag we are currently choosing a bundle.
+	var/choosing_bundle = FALSE
+	var/chosen_bundle
+	// Magister - no defense and support, only attacks
+	var/list/magister_bundle = list(
 		/datum/action/cooldown/spell/projectile/greater_arcyne_bolt,
 		/datum/action/cooldown/spell/projectile/arc_bolt,
-		/datum/action/cooldown/spell/phase,
-		/datum/action/cooldown/spell/message,
-		/datum/action/cooldown/spell/create_campfire
+		/datum/action/cooldown/spell/projectile/spitfire,
+		/datum/action/cooldown/spell/projectile/gravel_blast,
+		/datum/action/cooldown/spell/projectile/arcyne_lance,
 	)
-	enchanter_bundle = list(
-		/datum/action/cooldown/spell/projectile/gravel_blast, //Offensive Tool
-		/datum/action/cooldown/spell/conjure_arcyne_ward/dragonhide,
-		/datum/action/cooldown/spell/mending,
-		/datum/action/cooldown/spell/arcyne_forge, //Utility
+	// Controller - debuffs
+	var/list/controller_bundle = list(
+		/datum/action/cooldown/spell/projectile/frost_bolt,
+		/datum/action/cooldown/spell/geas,
+		/datum/action/cooldown/spell/gravity,
+		/datum/action/cooldown/spell/wither,
+		/datum/action/cooldown/spell/augment_buff/grasp,
+	// Seer - support
+	)
+	var/list/seer_bundle = list(
 		/datum/action/cooldown/spell/augment_buff/attune_hawk,
-		/datum/action/cooldown/spell/augment_buff/blood_rush //Buff
-	)
-	seer_bundle = list(
-		/datum/action/cooldown/spell/conjure_arcyne_ward/crystalhide,
-		/datum/action/cooldown/spell/augment_buff/attune_giant,
-		/datum/action/cooldown/spell/augment_buff/guidance,
 		/datum/action/cooldown/spell/augment_buff/attune_haste,
 		/datum/action/cooldown/spell/augment_buff/fortitude,
-		/datum/action/cooldown/spell/mindlink,
+		/datum/action/cooldown/spell/arcyne_forge,
+		/datum/action/cooldown/spell/mending,
+		/datum/action/cooldown/spell/mindlink
 	)
+
+/datum/action/cooldown/spell/noc/TAspellpack/cast(atom/cast_on)
+	. = ..()
+
+	if(choosing_bundle)
+		return FALSE
+	var/choice = chosen_bundle
+	if(!chosen_bundle)
+		choosing_bundle = TRUE
+		choice = alert(owner, "What type of spells has Noc blessed you with?", "CHOOSE PATH", "Magister", "Controller", "Seer")
+		chosen_bundle = choice
+		choosing_bundle = FALSE
+
+	switch(choice)
+		if("Magister")
+			add_spells(owner, magister_bundle, grant_all = TRUE)
+			owner.mind?.RemoveSpell(src.type)
+			return TRUE
+		if("Controller")
+			add_spells(owner, controller_bundle, grant_all = TRUE)
+			owner.mind?.RemoveSpell(src.type)
+			return TRUE
+		if("Seer")
+			add_spells(owner, seer_bundle, grant_all = TRUE)
+			owner.mind?.RemoveSpell(src.type)
+			return TRUE
+	return FALSE
+
+/datum/action/cooldown/spell/noc/TAspellpack/proc/add_spells(mob/owner, list/spells, choice_count = 1, grant_all = FALSE)
+	for(var/spell_type in spells)
+		if(owner?.mind.has_spell(spells[spell_type]))
+			spells.Remove(spell_type)
+	if(!grant_all)
+		var/choice_count_visual = choice_count
+		for(var/i in 1 to choice_count)
+			var/choice = input(owner, "Choose a spell! Choices remaining: [choice_count_visual]") as null|anything in spells
+			if(!isnull(choice))
+				var/picked_spell = spells[choice]
+				var/datum/new_spell = new picked_spell
+				owner?.mind.AddSpell(new_spell)
+				choice_count_visual--
+				spells.Remove(choice)
+	else
+		for(var/spell_type in spells)
+			var/datum/new_spell = new spell_type
+			owner?.mind.AddSpell(new_spell)
+	if(!length(spells))
+		owner.mind?.RemoveSpell(src.type)
 
 // That's one in fact is not Noc changes, but it’s related to that.
 
