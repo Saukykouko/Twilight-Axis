@@ -6,95 +6,13 @@
 	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "darkvision"
 
-/////////////////////
-// T1 - Noc Gaze. //
-/////////////////////
-
-/datum/action/cooldown/spell/noc/TAbless
-	name = "Noc's Bless"
-	desc = "Noc grants a powerful blessing upon the chosen target, which increases the stats depending on the time of dae... Or nite. \n\
-		becomes better if caster has Tier 4 Miracles."
-	button_icon_state = "noc_sight"
-	glow_intensity = GLOW_INTENSITY_LOW
-	click_to_activate = TRUE
-	self_cast_possible = TRUE
-	cast_range = SPELL_RANGE_AURA
-	primary_resource_cost = SPELLCOST_CANTRIP
-	secondary_resource_cost = SPELLCOST_CANTRIP
-	invocation_type = INVOCATION_WHISPER
-	invocations = list("Dae and nite, dawn and dusk, Noc will not forget us all.")
-	charge_required = TRUE
-	charge_time = 2 SECONDS
-	cooldown_time = 1 MINUTES
-
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
-
-/datum/action/cooldown/spell/noc/TAbless/cast(atom/cast_on)
-	. = ..()
-	var/mob/living/spelltarget = cast_on
-	if(!isliving(spelltarget))
-		to_chat(owner, span_warning("Must be living!"))
-		return FALSE
-	if(!spelltarget.mind)
-		to_chat(owner, span_warning("The target's mind is too simple for Noc's Bless!"))
-		return FALSE
-	if(spelltarget.has_status_effect(/datum/status_effect/buff/TAnoc_bless))
-		to_chat(owner, span_warning("The target already has Blessing."))
-		return FALSE
-
-	var/mob/living/carbon/human/H = owner
-	var/datum/devotion/D = H.devotion
-	spelltarget.apply_status_effect(/datum/status_effect/buff/TAnoc_bless, D)
-	return TRUE
-
-/atom/movable/screen/alert/status_effect/buff/TAnoc_bless
-	name = "Noc's Bless"
-	desc = "Noc's blessing grants me everything I need to move forward."
-	icon_state = "enlightenment"
-
-/datum/status_effect/buff/TAnoc_bless
-	id = "noc_bless"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_bless
-	duration = 1 MINUTES
-
-/datum/status_effect/buff/TAnoc_bless/on_creation(mob/living/new_owner, datum/devotion/our_devotion)
-	if(GLOB.tod == "day")
-		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_STR = 3,STATKEY_CON = 2,STATKEY_SPD = 2)
-		else
-			effectedstats = list(STATKEY_STR = 2,STATKEY_CON = 2,STATKEY_SPD = 1)
-			duration *= 0.75
-
-	else if(GLOB.tod == "dawn")
-		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_SPD = 3,STATKEY_PER = 2,STATKEY_LCK = 2)
-			duration *= 1.25
-		else
-			effectedstats = list(STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
-
-	else if(GLOB.tod == "dusk")
-		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_WIL = 3,STATKEY_STR = 2,STATKEY_CON = 2)
-			duration *= 1.75
-		else
-			effectedstats = list(STATKEY_WIL = 2,STATKEY_STR = 2,STATKEY_CON = 1)
-			duration *= 1.5
-
-	else if(GLOB.tod == "night")
-		if(our_devotion.level == CLERIC_T4)
-			effectedstats = list(STATKEY_WIL = 3,STATKEY_SPD = 3,STATKEY_PER = 2,STATKEY_LCK = 2)
-		else
-			effectedstats = list(STATKEY_WIL = 3,STATKEY_SPD = 2,STATKEY_PER = 2,STATKEY_LCK = 1)
-		duration *= 2
-	. = ..()
-
 /////////////////////////
 // T1 - Enlightenment. //
 /////////////////////////
 
 /datum/action/cooldown/spell/noc/TAenlightenment
 	name = "Enlightenment"
-	desc = "Invoke a lesser form of the Moonlight Dance, temporarily increasing intelligence of your target. \
+	desc = "Temporarily increases intelligence of your target. \
 	Scales with holy skill and grows much more effective at nite."
 	button_icon_state = "noc_gaze"
 	sound = 'sound/magic/clang.ogg'
@@ -221,14 +139,14 @@
 	return FALSE
 
 ////////////////////////
-// T2 - Invisibility. //
+// T1 - Invisibility. //
 ////////////////////////
 
 /datum/action/cooldown/spell/noc/invisibility
 	name = "Invisibility"
 
 /////////////////////
-// T2 - Blindness. //
+// T1 - Blindness. //
 /////////////////////
 
 /datum/action/cooldown/spell/noc/TAblindness
@@ -288,9 +206,61 @@
 		duration = 5 SECONDS // Just in case someone somehow gets this W/O holy skill.
 	. = ..()
 
+/datum/status_effect/debuff/TAblindness/on_apply()
+	. = ..()
+	owner.adjust_blindness(3)
+
 /datum/status_effect/debuff/TAblindness/on_remove()
 	. = ..()
 	to_chat(owner, span_warning("My vision returns...!"))
+
+//////////////////////////
+// T2 - Noc's Enchant. //
+/////////////////////////
+
+/datum/action/cooldown/spell/noc/TAbless
+	name = "Noc's Enchant"
+	desc = "Using parchment or scroll, you can create a random non-combat enchantment scroll, that you can use on items."
+	button_icon_state = "noc_sight"
+	sound = 'sound/magic/churn.ogg'
+	glow_intensity = GLOW_INTENSITY_LOW
+	click_to_activate = TRUE
+	self_cast_possible = TRUE
+	cast_range = SPELL_RANGE_AURA
+	primary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY
+	secondary_resource_cost = SPELLCOST_MIRACLE_MAJOR
+	charge_required = TRUE
+	charge_time = 5 SECONDS
+	cooldown_time = 25 MINUTES
+
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+/datum/action/cooldown/spell/noc/TAbless/cast(atom/cast_on)
+	. = ..()
+	var/obj/item/paper/spelltarget = cast_on
+	if(!istype(spelltarget, /obj/item/paper))
+		to_chat(owner, span_warning("Must be a scroll or parchment!"))
+		revert_cast()
+		return FALSE
+
+	create_scroll(spelltarget, owner)
+	return TRUE
+
+/datum/action/cooldown/spell/noc/TAbless/proc/create_scroll(obj/item/paper/enchanting, mob/living/enchanter)
+	var/list/possible_enchantments = list()
+	var/obj/item/enchantmentscroll/scroll_to_spawn
+	var/basic_scroll_chance = 70 - (5 * enchanter.get_skill_level(associated_skill))
+	var/turf/scroll_turf = get_turf(enchanting.loc)
+	if(prob(basic_scroll_chance))
+		possible_enchantments = subtypesof(/obj/item/enchantmentscroll/basic)
+	else
+		possible_enchantments = subtypesof(/obj/item/enchantmentscroll/superior)
+	scroll_to_spawn = pick(possible_enchantments)
+	new scroll_to_spawn(scroll_turf)
+	animate(enchanting, alpha = 0, time = 1 SECONDS)
+	qdel(enchanting)
+	to_chat(enchanter, span_blue("The scroll is filled with knowledge that you can now use."))
+	return TRUE
 
 //////////////////////
 // T3 - Moonscorch. //
@@ -299,14 +269,15 @@
 /datum/action/cooldown/spell/noc/TAmoonscorch
 	name = "Moonscorch"
 	desc = "Calls down shimmering moonlight onto those around you in a certain radius, scaling with holy skill. \
-	Mindless creachers will start to burn. \
+	in FIRE mode - Creatures around you will be marked with light. Mindless creachers will start to burn. \
+	in DARKNESS mode - Creatures around you will be slowed down, and their light will be extinguished. \
 	Does not work during dae nor dawn."
 	button_icon_state = "moon_light"
 	sound = 'sound/magic/churn.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
 
 	click_to_activate = TRUE
-	cast_range = 2
+	cast_range = 8
 	self_cast_possible = FALSE
 
 	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR
@@ -323,6 +294,43 @@
 	cooldown_time = 1.5 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+	var/current_mode = 1
+	var/list/modes = list(
+		list("name" = "Moonscorch", "tag" = "DARKNESS", "icon" = "moon_light", "invocation" = "TRY TO FIND ME!!", "THERE IS ALWAYS PLACE TO HIDE FOR ME!!"),
+		list("name" = "Moonscorch", "tag" = "FIRE", "icon" = "moon_light", "invocation" = "YOUR TRUE FORM REVEALED!!", "THERE IS NO PLACE TO HIDE!!"),
+	)
+
+/datum/action/cooldown/spell/noc/TAmoonscorch/Grant(mob/grant_to)
+	. = ..()
+	apply_mode(current_mode)
+
+/datum/action/cooldown/spell/noc/TAmoonscorch/proc/apply_mode(index)
+	var/list/mode = modes[index]
+	name = mode["name"]
+	button_icon_state = mode["icon"]
+	invocations = list(mode["invocation"])
+	build_all_button_icons()
+	update_mode_maptext(mode["tag"])
+
+/datum/action/cooldown/spell/noc/TAmoonscorch/toggle_alt_mode(mob/user)
+	current_mode = (current_mode % length(modes)) + 1
+	apply_mode(current_mode)
+	to_chat(user, span_notice("[name]: [modes[current_mode]["tag"]] mode."))
+	return TRUE
+
+/datum/action/cooldown/spell/noc/TAmoonscorch/proc/update_mode_maptext(tag)
+	for(var/datum/hud/hud as anything in viewers)
+		var/atom/movable/screen/movable/action_button/B = viewers[hud]
+		var/atom/movable/screen/arc_maptext_holder/holder
+		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
+			holder = existing
+			break
+		if(!holder)
+			holder = new(B)
+			B.vis_contents.Add(holder)
+		holder.maptext = MAPTEXT(tag)
+		holder.maptext_x = 5
+		holder.color = GLOW_COLOR_LIGHTNING
 
 /datum/action/cooldown/spell/noc/TAmoonscorch/cast(atom/cast_on)
 	. = ..()
@@ -330,13 +338,28 @@
 	if(GLOB.tod == "day")
 		to_chat(owner, span_warning("ASTRATA IS RISEN! MY SPELL FIZZLES!"))
 		return FALSE
-	var/checkrange = (cast_range + owner.get_skill_level(/datum/skill/magic/holy)) //+1 range per holy skill up to a potential of 8.
-	for(var/mob/living/M in range(checkrange, owner))
-		if(M == owner)
+	if(current_mode == 1)
+		cast_darkness(owner)
+	else
+		cast_fire(owner)
+	return TRUE
+
+/datum/action/cooldown/spell/noc/TAmoonscorch/proc/cast_fire(mob/living/caster)
+	var/checkrange = (3 + caster.get_skill_level(/datum/skill/magic/holy)) //+1 range per holy skill up to a potential of 8.
+	for(var/mob/living/M in range(checkrange, caster))
+		if(M == caster)
 			continue
 		var/target_turf = get_turf(M)
 		new /obj/effect/temp_visual/TAmoon(target_turf)
-		M.apply_status_effect(/datum/status_effect/light_buff/TAmoon, 4)
+		M.apply_status_effect(/datum/status_effect/light_buff/TAnoc_fire, 4)
+	return TRUE
+
+/datum/action/cooldown/spell/noc/TAmoonscorch/proc/cast_darkness(mob/living/caster)
+	var/checkrange = (1 + caster.get_skill_level(/datum/skill/magic/holy)) //+1 range per holy skill up to a potential of 8.
+	for(var/mob/living/M in range(checkrange, caster))
+		if(M == caster)
+			continue
+		M.apply_status_effect(/datum/status_effect/debuff/TAnoc_darkness, 4)
 	return TRUE
 
 /obj/effect/temp_visual/TAmoon
@@ -346,19 +369,49 @@
 	light_outer_range = 3
 	light_color = "#1640d7ff"
 
-/datum/status_effect/light_buff/TAmoon
-	id = "moon_light_buff"
-	alert_type = /atom/movable/screen/alert/status_effect/light_buff
+/datum/status_effect/light_buff/TAnoc_fire
+	id = "noc_fire"
+	alert_type = /atom/movable/screen/alert/status_effect/light_buff/TAnoc_fire
 	duration = 15 SECONDS
 	color_mob_light = "#3a9399cf"
 	outline_colour = "#3a9999cf"
 
-/datum/status_effect/light_buff/TAmoon/on_apply()
+/datum/status_effect/light_buff/TAnoc_fire/on_apply()
 	if(!owner.mind) //PVE stuff.
 		owner.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
 		owner.ignite_mob()
 		owner.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
 	return ..()
+
+/atom/movable/screen/alert/status_effect/light_buff/TAnoc_fire
+	name = "Nite Light"
+
+/datum/status_effect/debuff/TAnoc_darkness
+	id = "noc_darkness"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
+	effectedstats = list(STATKEY_SPD = -3,STATKEY_WIL = -2)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/TAnoc_darkness/on_apply()
+	for(var/obj/O in range(1, owner))
+		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+			continue
+		if(istype(O, /obj/item/flashlight/flare/light))
+			qdel(O)
+		O.extinguish()
+
+	for(var/mob/M in range(1, owner))
+		for(var/obj/O in M.contents)
+			if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+				continue
+			if(istype(O, /obj/item/flashlight/flare/light))
+				qdel(O)
+			O.extinguish()
+	return ..()
+
+/atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
+	name = "Nite Darkness"
+	desc = "You feel a weight on your soul, as if something is pulling you down..."
 
 ///////////////////////////
 // T3 - Arcyne Affinity. //
@@ -367,8 +420,8 @@
 /datum/action/cooldown/spell/noc/TAspellpack
 	name = "Arcyne Affinity"
 	desc = "Allows you to learn a set of spells. \n \
-	<b>MAGISTER</b>: Greater Arcyne Bolt, Arc Bolt, Gravel Blast, Basic Offensive Magic \n \
-	<b>CONTROLLER</b>: Frost Bolt, Geas, Gravity, Wither \n \
+	<b>MAGISTER</b>: Greater Arcyne Bolt, Arc Bolt, Spit Fire, Gravel Blast, Arcyne Lance \n \
+	<b>CONTROLLER</b>: Frost Bolt, Geas, Gravity, Wither, Grasp \n \
 	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Mindlink, Create Campfire"
 	button_icon_state = "spellpack"
 	click_to_activate = FALSE
