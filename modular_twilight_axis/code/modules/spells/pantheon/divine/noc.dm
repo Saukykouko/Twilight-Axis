@@ -240,7 +240,6 @@
 	var/obj/item/paper/spelltarget = cast_on
 	if(!istype(spelltarget, /obj/item/paper))
 		to_chat(owner, span_warning("Must be a scroll or parchment!"))
-		revert_cast()
 		return FALSE
 
 	create_scroll(spelltarget, owner)
