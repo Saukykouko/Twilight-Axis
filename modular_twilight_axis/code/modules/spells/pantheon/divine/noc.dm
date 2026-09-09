@@ -245,7 +245,7 @@
 	create_scroll(spelltarget, owner)
 	return TRUE
 
-/datum/action/cooldown/spell/noc/TAbless/proc/create_scroll(obj/item/paper/enchanting, mob/living/carbon/enchanter)
+/datum/action/cooldown/spell/noc/TAbless/proc/create_scroll(obj/item/paper/enchanting, mob/living/carbon/human/enchanter)
 	var/list/possible_enchantments = list()
 	var/obj/item/enchantmentscroll/scroll_to_spawn
 	var/basic_scroll_chance = 70 - (5 * enchanter.get_skill_level(associated_skill))
