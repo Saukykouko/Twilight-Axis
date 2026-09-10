@@ -4942,3 +4942,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_pata
 	triumph_cost = 12
+
+/datum/loadout_item/donator_crowcane_blade
+	name = "Donator Kit - Crow Cane Blade - Required: Rapier or Sabre"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/crowcane_blade
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator_crowcane_scabbard
+	name = "Donator Kit - Crow Cane Scabbard - Required: Simple Scabbard"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/crowcane_scabbard
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator_jezail
+	name = "Donator Kit - Jezail - Required: Arquebus, Hakenbüchse, or Barker"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/jezail
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator_teppo
+	name = "Donator Kit - Teppo - Required: Arquebus, Hakenbüchse, or Barker"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/teppo
+	donatitem = TRUE
+	donat_tier = 2
