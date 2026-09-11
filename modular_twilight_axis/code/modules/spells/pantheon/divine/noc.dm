@@ -1,3 +1,7 @@
+/datum/action/cooldown/spell/noc
+	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+
 /////////////////////////
 // T0 - Nitesight. //////
 /////////////////////////
@@ -5,98 +9,102 @@
 /datum/action/cooldown/spell/noc/nitevision
 	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "darkvision"
+	desc = "Дарует вам и людям вокруг ночное зрение."
+	invocation_type = "Нок направляет мой взор."
 
-/////////////////////////
-// T1 - Enlightenment. //
-/////////////////////////
+//////////////////////////////
+// T1 - Step in the shadow. //
+/////////////////////////////
 
-/datum/action/cooldown/spell/noc/TAenlightenment
-	name = "Enlightenment"
-	desc = "Temporarily increases intelligence of your target. \
-	Scales with holy skill and grows much more effective at nite."
+/datum/action/cooldown/spell/noc/TAstep_in_the_shadow
+	name = "Шаг во тьму"
+	desc = "Находясь в тени, вы можете быстро телепортироваться в неосвещённое место. Ограничено дальностью в 6 шагов."
+	sound = 'sound/magic/blink.ogg'
+	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "noc_gaze"
-	sound = 'sound/magic/clang.ogg'
-	glow_intensity = GLOW_INTENSITY_LOW
-
-	click_to_activate = TRUE
-	cast_range = SPELL_RANGE_ADJACENT
-	self_cast_possible = TRUE
-
-	primary_resource_cost = SPELLCOST_STAT_BUFF
-	secondary_resource_cost = SPELLCOST_STAT_BUFF
-
-	invocation_type = INVOCATION_SHOUT
-	invocations = list("Her gaze upon me...!", "I beseech the stars; show me truth!")
-
+	cooldown_time = 30 SECONDS
+	invocation_type = INVOCATION_NONE
+	charge_sound = null
 	charge_required = TRUE
-	charge_time = 1 SECONDS
-	charge_slowdown = CHARGING_SLOWDOWN_SMALL
-	charge_sound = 'sound/magic/charging.ogg'
-	charge_then_click = TRUE
-	cooldown_time = 2 MINUTES
+	hold_drain = 1
+	spell_color = NONE
+	glow_intensity = NONE
+	ignore_armor_penalty = TRUE
+	attunement_school = null
+	source_aspect = null
+	weapon_cast_penalized = FALSE
+	primary_resource_type = SPELLCOST_MIRACLE_MAJOR
+	secondary_resource_type = SPELLCOST_TELEPORT
+	has_visual_effects = FALSE
+	hide_charge_effect = TRUE
+	spell_impact_intensity = SPELL_IMPACT_NONE
+	associated_stat = null
+	associated_skill = /datum/skill/magic/holy
+	spell_tier = 0
+	point_cost = 0
+	charge_slowdown = 0
+	var/max_range = 6
+	var/phase = /obj/effect/temp_visual/blink/shadowstep
 
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
-
-/datum/action/cooldown/spell/noc/TAenlightenment/cast(atom/cast_on)
+/datum/action/cooldown/spell/noc/TAstep_in_the_shadow/cast(atom/cast_on)
 	. = ..()
-	var/mob/living/carbon/human/H = owner
-	if(!istype(H))
+	var/turf/T = get_turf(cast_on)
+	var/turf/start = get_turf(owner)
+	if(T.get_lumcount() > 0.25 || start.get_lumcount() > 0.25)
+		to_chat(owner, span_warning("There is too much light!"))
 		return FALSE
 
-	if(!isliving(cast_on))
-		to_chat(H, span_warning("That is not a valid target!"))
+	var/dest_err = arcyne_validate_blink_dest(T, owner)
+	if(dest_err)
+		to_chat(owner, span_warning(dest_err))
 		return FALSE
 
-	var/skill_level = H.get_skill_level(associated_skill)
-	var/mob/living/spelltarget = cast_on
+	var/distance = get_dist(start, T)
+	if(distance > max_range)
+		to_chat(owner, span_warning("That location is too far away! I can only blink up to [max_range] tiles."))
+		return FALSE
 
-	if(spelltarget != H)
-		H.visible_message("[H] mutters an incantation and [spelltarget] briefly shines green.")
-		to_chat(H, span_notice("With another person as a conduit, my spell's duration is extended."))
-		spelltarget.apply_status_effect(/datum/status_effect/buff/TAwise_moon, skill_level)
-	else
-		H.visible_message("[H] mutters an incantation and they briefly shine green.")
-		spelltarget.apply_status_effect(/datum/status_effect/buff/TAwise_moon, skill_level)
-	if(GLOB.tod == "day")
-		to_chat(H, span_warning("ASTRATA IS RISEN! My spell loses some of its potency! (-1 TO STAT BOOST.)"))
+	var/path_err = arcyne_validate_blink_path(start, T)
+	if(path_err)
+		to_chat(owner, span_warning(path_err))
+		return FALSE
+
+	owner.visible_message(span_warning("<b>[owner]'s body begins to shimmer with arcane energy as [owner.p_they()] prepare[owner.p_s()] to blink!</b>"),
+					span_notice("<b>I focus my arcane energy, preparing to blink across space!</b>"))
+
+	new phase(start, owner.dir)
+	new phase(T, owner.dir)
+
+	var/mob/living/L = owner
+	if(istype(L) && L.buckled)
+		L.buckled.unbuckle_mob(L, TRUE)
+
+	// Afterimage at departure point
+	var/obj/effect/after_image/img = new(start, 0, 0, 0, 0, 0.5 SECONDS, 2 SECONDS, 0)
+	img.name = owner.name
+	img.appearance = owner.appearance
+	img.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	img.alpha = 120
+	animate(img, alpha = 0, time = 1.5 SECONDS, easing = LINEAR_EASING)
+	QDEL_IN(img, 1.5 SECONDS)
+
+	do_teleport(owner, T, channel = TELEPORT_CHANNEL_MAGIC)
+
 	return TRUE
 
-/atom/movable/screen/alert/status_effect/buff/TAwise_moon
-	name = "Enlightenment"
-	desc = "Divine magic is boosting my intelligence."
-	icon_state = "enlightenment"
-
-/datum/status_effect/buff/TAwise_moon
-	id = "wise_moon"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/TAwise_moon
-	duration = 2 MINUTES
-
-/datum/status_effect/buff/TAwise_moon/on_creation(mob/living/new_owner, assocskill)
-	var/int_bonus = 0
-	if(assocskill)
-		int_bonus = 2
-		if(assocskill >= 4)
-			int_bonus = 3
-	if(GLOB.tod == "night")
-		if(assocskill <= 2)
-			int_bonus = 3
-		else
-			int_bonus = assocskill + 1
-		duration *= 2
-	if(GLOB.tod == "day")
-		int_bonus--
-	if(int_bonus > 0)
-		effectedstats = list(STATKEY_INT = int_bonus)
-	. = ..()
+/obj/effect/temp_visual/blink/shadowstep
+	icon_state = "curse"
+	light_color = COLOR_PALE_PURPLE_GRAY
 
 ///////////////////////
 // T1 - Inspiration. //
 ///////////////////////
 
 /datum/action/cooldown/spell/noc/TAinspiration
-	name = "Inspiration"
-	desc = "Touch a target. Their next dream will be inspired, granting more dream-points to the target and a few to yourself. \
-	This spell will fail if it's dae or dawn. Points granted scales with holy skill."
+	name = "Вдохновение"
+	desc = "Прикоснитесь к цели. Следующий сон цели будет вдохновлён, даруя больше очков сна цели и немного себе. \
+	Количество очков зависит от вашего уровня чудес."
 	button_icon_state = "moondream"
 	sound = 'sound/magic/owlhoot.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
@@ -110,7 +118,7 @@
 	secondary_resource_cost = SPELLCOST_MIRACLE_MINOR
 
 	invocation_type = INVOCATION_WHISPER
-	invocations = list("Good nite.")
+	invocations = list("Спокойной ночи.")
 
 	charge_required = FALSE
 	cooldown_time = 25 MINUTES
@@ -122,36 +130,37 @@
 	if(isliving(cast_on))
 		var/mob/living/carbon/human/target = cast_on
 		var/mob/living/carbon/human/H = owner
-		if(!target.mind)
-			to_chat(owner, span_warning("They are too simple for this spell to work!"))
+		if(target.anti_magic_check(TRUE, TRUE))
+			to_chat(owner, span_danger("Что-то мешает мне вдохновить их сны!"))
 			return FALSE
-		if(GLOB.tod == "day" || GLOB.tod == "dawn")
-			to_chat(owner, span_warning("ASTRATA IS RISEN! MY SPELL FIZZLES!"))
+		if(!target.mind)
+			to_chat(owner, span_warning("Цель слишком глупа для моих чудес!"))
 			return FALSE
 		if(target.mind?.sleep_adv)
-			owner.visible_message(span_blue("[owner] draws a glowing blue crescent on [target]\'s forehead!"))
-			to_chat(target, span_blue("My mind flashes with inspiring images of the NOCMOS! My dreams will prove fruitful...!"))
+			owner.visible_message(span_blue("[owner] рисует светящийся голубой полумесяц на голове [target]"))
+			to_chat(target, span_blue("Мой разум сияет множественными изображениями и идеями! Мои сны будут более насыщенными...!"))
 			target.mind.sleep_adv.sleep_adv_points += H.get_skill_level(associated_skill)
 			target.energy_add(50 * H.get_skill_level(associated_skill))
-			H.energy_add(50 * H.get_skill_level(associated_skill))
+			H.energy_add(25 * H.get_skill_level(associated_skill))
 			H.mind.sleep_adv.sleep_adv_points += floor(H.get_skill_level(associated_skill)/2)
 		return TRUE
 	return FALSE
 
-////////////////////////
-// T2 - Invisibility. //
+/////////////////////////
+// T2 - Enlightenment. //
 ////////////////////////
 
-/datum/action/cooldown/spell/noc/invisibility
-	name = "Invisibility"
+/datum/action/cooldown/spell/noc/enlightenment
+	invocation_type = "Дай мне свой совет."
+	button_icon_state = "noc_sight"
 
 /////////////////////
 // T2 - Blindness. //
 /////////////////////
 
 /datum/action/cooldown/spell/noc/TAblindness
-	name = "Blindness"
-	desc = "Direct a mote of living darkness to temporarily blind another. \n(-3 PERCEPTION, SHORT BLINDNESS)"
+	name = "Ослепление"
+	desc = "Направьте тьму в глаза жертвы, ослепляя её. \n(-3 ВНИМАТЕЛЬНОСТИ, КОРОТКОЕ ОСЛЕПЛЕНИЕ)"
 	button_icon_state = "blindness"
 	sound = 'sound/magic/churn.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
@@ -161,7 +170,7 @@
 	primary_resource_cost = SPELLCOST_MIRACLE
 	secondary_resource_cost = SPELLCOST_MIRACLE
 	invocation_type = INVOCATION_SHOUT
-	invocations = list("Blackest nite, blind!")
+	invocations = list("Темнейшая ночь, ослепи!")
 	charge_required = TRUE
 	charge_time = 1 SECONDS
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
@@ -175,6 +184,7 @@
 
 	if(isliving(cast_on))
 		if(spelltarget.anti_magic_check(TRUE, TRUE))
+			to_chat(owner, span_danger("Their magic protection has interrupted my cast!"))
 			return FALSE
 		if(spell_guard_check(cast_on, TRUE))
 			cast_on.visible_message(span_warning("[cast_on] shields their eyes from the darkness!"))
@@ -190,8 +200,8 @@
 		return FALSE
 
 /atom/movable/screen/alert/status_effect/debuff/TAblindness
-	name = "Blindness"
-	desc = "I see naught but darkness! (-3 PER, blindness)"
+	name = "Слепота"
+	desc = "Я ничего не вижу! (-3 ВНИМАТЕЛЬНОСТИ, СЛЕПОТА)"
 
 /datum/status_effect/debuff/TAblindness
 	id = "blindness"
@@ -214,212 +224,70 @@
 	. = ..()
 	to_chat(owner, span_warning("My vision returns...!"))
 
-//////////////////////////
-// T3 - Noc's Enchant. //
-/////////////////////////
 
-/datum/action/cooldown/spell/noc/TAbless
-	name = "Noc's Enchant"
-	desc = "Using parchment or scroll, you can create a random non-combat enchantment scroll, that you can use on items."
-	button_icon_state = "noc_sight"
-	sound = 'sound/magic/churn.ogg'
-	glow_intensity = GLOW_INTENSITY_LOW
-	click_to_activate = TRUE
-	self_cast_possible = TRUE
-	cast_range = SPELL_RANGE_AURA
-	primary_resource_cost = SPELLCOST_MIRACLE_LEGENDARY
-	secondary_resource_cost = SPELLCOST_MIRACLE_MAJOR
-	charge_required = TRUE
-	charge_time = 5 SECONDS
-	cooldown_time = 25 MINUTES
+////////////////////////
+// T2 - Invisibility. //
+////////////////////////
 
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+/datum/action/cooldown/spell/noc/invisibility
+	hide_charge_effect = TRUE
 
-/datum/action/cooldown/spell/noc/TAbless/cast(atom/cast_on)
+////////////////////////
+// T3 - Silence. 	  //
+////////////////////////
+
+/datum/action/cooldown/spell/noc/TAsilence
+	name = "Тишина"
+	desc = "Закройте жертве рот - жертва не произнесёт ни слова, будь это чтение заклинания или оскорбление. \
+		Длительность зависит от уровня чудес."
+	button_icon_state = "silence"
+	cooldown_time = 60 SECONDS
+	charge_time = 1 SECONDS
+	cast_range = 7
+	sound = 'sound/magic/zizo_snuff.ogg'
+	invocations = list("Молчание луны!")
+	invocation_type = INVOCATION_WHISPER
+	devotion_cost = SPELLCOST_MIRACLE_MAJOR
+
+/datum/action/cooldown/spell/noc/TAsilence/cast(atom/cast_on)
 	. = ..()
-	var/obj/item/paper/spelltarget = cast_on
-	if(!istype(spelltarget, /obj/item/paper))
-		to_chat(owner, span_warning("Must be a scroll or parchment!"))
+	if(isliving(cast_on))
+		var/mob/living/carbon/target = cast_on
+		var/mob/living/carbon/caster = owner
+		if(target.anti_magic_check(TRUE, TRUE))
+			to_chat(caster, span_warning("The spell fizzles, it won't work on them!"))
+			return FALSE
+		var/assocskill = caster.get_skill_level(associated_skill)
+		target.apply_status_effect(/datum/status_effect/debuff/TAmute, assocskill)
+		return TRUE
+	else
 		return FALSE
 
-	create_scroll(spelltarget, owner)
-	return TRUE
+/datum/status_effect/debuff/TAmute
+	id = "mute"
+	duration = 5 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAmute
 
-/datum/action/cooldown/spell/noc/TAbless/proc/create_scroll(obj/item/paper/enchanting, mob/living/carbon/human/enchanter)
-	var/list/possible_enchantments = list()
-	var/obj/item/enchantmentscroll/scroll_to_spawn
-	var/basic_scroll_chance = 70 - (5 * enchanter.get_skill_level(associated_skill))
-	var/turf/scroll_turf = get_turf(enchanting.loc)
-	if(enchanter.devotion?.level >= CLERIC_T4)
-		if(prob(basic_scroll_chance))
-			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/basic)
-		else if(prob(basic_scroll_chance + 10))
-			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/superior)
-		else
-			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/greater)
+/datum/status_effect/debuff/TAmute/on_creation(mob/living/new_owner, assocskill)
+	if(assocskill)
+		duration = clamp(assocskill*5, 5, 30) * 1 SECONDS
 	else
-		if(prob(basic_scroll_chance))
-			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/basic)
-		else
-			possible_enchantments = subtypesof(/obj/item/enchantmentscroll/superior)
-
-	scroll_to_spawn = pick(possible_enchantments)
-	new scroll_to_spawn(scroll_turf)
-	animate(enchanting, alpha = 0, time = 1 SECONDS)
-	qdel(enchanting)
-	to_chat(enchanter, span_blue("The scroll is filled with knowledge that you can now use."))
-	return TRUE
-
-//////////////////////
-// T3 - Moonscorch. //
-//////////////////////
-
-/datum/action/cooldown/spell/noc/TAmoonscorch
-	name = "Moonscorch"
-	desc = "Calls down shimmering moonlight onto those around you in a certain radius, scaling with holy skill. \
-	in FIRE mode - Creatures around you will be marked with light. Mindless creachers will start to burn. \
-	in DARKNESS mode - Creatures around you will be slowed down, and their light will be extinguished. \
-	Does not work during dae nor dawn."
-	button_icon_state = "moon_light"
-	sound = 'sound/magic/churn.ogg'
-	glow_intensity = GLOW_INTENSITY_LOW
-
-	click_to_activate = TRUE
-	cast_range = 8
-	self_cast_possible = FALSE
-
-	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR
-
-	secondary_resource_cost = SPELLCOST_MIRACLE
-
-	invocation_type = INVOCATION_SHOUT
-	invocations = list("YOUR TRUE FORM REVEALED!!", "THERE IS NO PLACE TO HIDE!!")
-
-	charge_required = TRUE
-	charge_time = 3 SECONDS
-	charge_slowdown = CHARGING_SLOWDOWN_SMALL
-	charge_sound = 'sound/magic/holycharging.ogg'
-	cooldown_time = 1.5 MINUTES
-
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
-	var/current_mode = 1
-	var/list/modes = list(
-		list("name" = "Moonscorch", "tag" = "DARKNESS", "icon" = "moon_light", "invocation" = "TRY TO FIND ME!!", "THERE IS ALWAYS PLACE TO HIDE FOR ME!!"),
-		list("name" = "Moonscorch", "tag" = "FIRE", "icon" = "moon_light", "invocation" = "YOUR TRUE FORM REVEALED!!", "THERE IS NO PLACE TO HIDE!!"),
-	)
-
-/datum/action/cooldown/spell/noc/TAmoonscorch/Grant(mob/grant_to)
-	. = ..()
-	apply_mode(current_mode)
-
-/datum/action/cooldown/spell/noc/TAmoonscorch/proc/apply_mode(index)
-	var/list/mode = modes[index]
-	name = mode["name"]
-	button_icon_state = mode["icon"]
-	invocations = list(mode["invocation"])
-	build_all_button_icons()
-	update_mode_maptext(mode["tag"])
-
-/datum/action/cooldown/spell/noc/TAmoonscorch/toggle_alt_mode(mob/user)
-	current_mode = (current_mode % length(modes)) + 1
-	apply_mode(current_mode)
-	to_chat(user, span_notice("[name]: [modes[current_mode]["tag"]] mode."))
-	return TRUE
-
-/datum/action/cooldown/spell/noc/TAmoonscorch/proc/update_mode_maptext(tag)
-	for(var/datum/hud/hud as anything in viewers)
-		var/atom/movable/screen/movable/action_button/B = viewers[hud]
-		var/atom/movable/screen/arc_maptext_holder/holder
-		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
-			holder = existing
-			break
-		if(!holder)
-			holder = new(B)
-			B.vis_contents.Add(holder)
-		holder.maptext = MAPTEXT(tag)
-		holder.maptext_x = 5
-		holder.color = GLOW_COLOR_LIGHTNING
-
-/datum/action/cooldown/spell/noc/TAmoonscorch/cast(atom/cast_on)
+		duration = 5 SECONDS
 	. = ..()
 
-	if(GLOB.tod == "day")
-		to_chat(owner, span_warning("ASTRATA IS RISEN! MY SPELL FIZZLES!"))
-		return FALSE
-	if(current_mode == 1)
-		cast_darkness(owner)
-	else
-		cast_fire(owner)
-	return TRUE
+/datum/status_effect/debuff/TAmute/on_apply()
+	. = ..()
+	to_chat(owner, span_warning("The wind in my voice goes still. I can't speak!"))
+	ADD_TRAIT(owner, TRAIT_MUTE, MAGIC_TRAIT)
 
-/datum/action/cooldown/spell/noc/TAmoonscorch/proc/cast_fire(mob/living/caster)
-	var/checkrange = (3 + caster.get_skill_level(/datum/skill/magic/holy)) //+1 range per holy skill up to a potential of 8.
-	for(var/mob/living/M in range(checkrange, caster))
-		if(M == caster)
-			continue
-		var/target_turf = get_turf(M)
-		new /obj/effect/temp_visual/TAmoon(target_turf)
-		M.apply_status_effect(/datum/status_effect/light_buff/TAnoc_fire, 4)
-	return TRUE
+/datum/status_effect/debuff/TAmute/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("My voice returns to me!"))
+	REMOVE_TRAIT(owner, TRAIT_MUTE, MAGIC_TRAIT)
 
-/datum/action/cooldown/spell/noc/TAmoonscorch/proc/cast_darkness(mob/living/caster)
-	var/checkrange = (1 + caster.get_skill_level(/datum/skill/magic/holy)) //+1 range per holy skill up to a potential of 8.
-	for(var/mob/living/M in range(checkrange, caster))
-		if(M == caster)
-			continue
-		M.apply_status_effect(/datum/status_effect/debuff/TAnoc_darkness, 4)
-	return TRUE
-
-/obj/effect/temp_visual/TAmoon
-	icon_state = "moon"
-	duration = 4 SECONDS
-	layer = MASSIVE_OBJ_LAYER
-	light_outer_range = 3
-	light_color = "#1640d7ff"
-
-/datum/status_effect/light_buff/TAnoc_fire
-	id = "noc_fire"
-	alert_type = /atom/movable/screen/alert/status_effect/light_buff/TAnoc_fire
-	duration = 15 SECONDS
-	color_mob_light = "#3a9399cf"
-	outline_colour = "#3a9999cf"
-
-/datum/status_effect/light_buff/TAnoc_fire/on_apply()
-	if(!owner.mind) //PVE stuff.
-		owner.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
-		owner.ignite_mob()
-		owner.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
-	return ..()
-
-/atom/movable/screen/alert/status_effect/light_buff/TAnoc_fire
-	name = "Nite Light"
-
-/datum/status_effect/debuff/TAnoc_darkness
-	id = "noc_darkness"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
-	effectedstats = list(STATKEY_SPD = -3,STATKEY_WIL = -2)
-	duration = 15 SECONDS
-
-/datum/status_effect/debuff/TAnoc_darkness/on_apply()
-	for(var/obj/O in range(1, owner))
-		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
-			continue
-		if(istype(O, /obj/item/flashlight/flare/light))
-			qdel(O)
-		O.extinguish()
-
-	for(var/mob/M in range(1, owner))
-		for(var/obj/O in M.contents)
-			if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
-				continue
-			if(istype(O, /obj/item/flashlight/flare/light))
-				qdel(O)
-			O.extinguish()
-	return ..()
-
-/atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
-	name = "Nite Darkness"
-	desc = "You feel a weight on your soul, as if something is pulling you down..."
+/atom/movable/screen/alert/status_effect/debuff/TAmute
+	name = "Немота"
+	desc = "Мой рот не издает и звука, я не могу говорить!"
 
 ///////////////////////////
 // T3 - Arcyne Affinity. //
@@ -427,10 +295,10 @@
 
 /datum/action/cooldown/spell/noc/TAspellpack
 	name = "Arcyne Affinity"
-	desc = "Allows you to learn a set of spells. \n \
-	<b>MAGISTER</b>: Greater Arcyne Bolt, Arc Bolt, Spit Fire, Gravel Blast, Arcyne Lance \n \
+	desc = "Allows you to learn a spellpack. \n \
+	<b>MAGISTER</b>: Arc Bolt, Spit Fire, Arcyne Lance \n \
 	<b>CONTROLLER</b>: Frost Bolt, Geas, Gravity, Wither, Grasp \n \
-	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Mindlink, Create Campfire"
+	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Mindlink"
 	button_icon_state = "spellpack"
 	click_to_activate = FALSE
 	primary_resource_cost = SPELLCOST_MIRACLE
@@ -443,12 +311,10 @@
 	/// var we use to flag we are currently choosing a bundle.
 	var/choosing_bundle = FALSE
 	var/chosen_bundle
-	// Magister - no defense and support, only attacks
+	// Magister - attacks
 	var/list/magister_bundle = list(
-		/datum/action/cooldown/spell/projectile/greater_arcyne_bolt,
 		/datum/action/cooldown/spell/projectile/arc_bolt,
 		/datum/action/cooldown/spell/projectile/spitfire,
-		/datum/action/cooldown/spell/projectile/gravel_blast,
 		/datum/action/cooldown/spell/projectile/arcyne_lance,
 	)
 	// Controller - debuffs
@@ -458,7 +324,7 @@
 		/datum/action/cooldown/spell/gravity,
 		/datum/action/cooldown/spell/wither,
 		/datum/action/cooldown/spell/augment_buff/grasp,
-	// Seer - support
+	// Seer - support and help
 	)
 	var/list/seer_bundle = list(
 		/datum/action/cooldown/spell/augment_buff/attune_hawk,
@@ -517,6 +383,86 @@
 	if(!length(spells))
 		owner.mind?.RemoveSpell(src.type)
 
+
+//////////////////////
+// T3 - Moonlight. //
+//////////////////////
+
+/datum/action/cooldown/spell/noc/TAmoonlight
+	name = "Лунный свет"
+	desc = "Луна поглощает весь свет и замедляет окружающих в определенном радиусе, эффект зависит от уровня чудес. \
+		Низшие существа вокруг вас потеряют возможность двигаться."
+	button_icon_state = "moon_light"
+	sound = 'sound/magic/churn.ogg'
+	glow_intensity = GLOW_INTENSITY_LOW
+
+	click_to_activate = TRUE
+	cast_range = 8
+	self_cast_possible = FALSE
+
+	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR
+
+	secondary_resource_cost = SPELLCOST_MIRACLE
+
+	invocation_type = INVOCATION_SHOUT
+	invocations = list("Для меня всегда найдётся тень!", "Попробуй найди меня!")
+
+	charge_required = TRUE
+	charge_time = 3 SECONDS
+	charge_slowdown = CHARGING_SLOWDOWN_SMALL
+	charge_sound = 'sound/magic/holycharging.ogg'
+	cooldown_time = 2 MINUTES
+
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+/datum/action/cooldown/spell/noc/TAmoonlight/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/caster = owner
+	var/checkrange = (1 + caster.get_skill_level(/datum/skill/magic/holy))
+	for(var/mob/living/M in range(checkrange, caster))
+		if(M == caster)
+			continue
+		if(M.anti_magic_check(TRUE, TRUE))
+			continue
+		M.apply_status_effect(/datum/status_effect/debuff/TAnoc_darkness)
+	for(var/obj/O in range(checkrange, caster))
+		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+			continue
+		if(istype(O, /obj/item/flashlight/flare/light))
+			qdel(O)
+		O.extinguish()
+	return TRUE
+
+/datum/status_effect/debuff/TAnoc_darkness
+	id = "noc_darkness"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
+	effectedstats = list(STATKEY_SPD = -2)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/TAnoc_darkness/on_apply()
+	if(!owner.mind)
+		owner.Immobilize(3 SECONDS)
+
+	for(var/obj/O in range(1, owner))
+		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+			continue
+		if(istype(O, /obj/item/flashlight/flare/light))
+			qdel(O)
+		O.extinguish()
+
+	for(var/mob/M in range(1, owner))
+		for(var/obj/O in M.contents)
+			if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+				continue
+			if(istype(O, /obj/item/flashlight/flare/light))
+				qdel(O)
+			O.extinguish()
+	return ..()
+
+/atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
+	name = "Nite Darkness"
+	desc = "You feel a weight on your soul, as if something is pulling you down..."
+
 // That's one in fact is not Noc changes, but it’s related to that.
 
 /datum/action/cooldown/spell/undivided/undivided_spellpack
@@ -539,6 +485,11 @@
 		/obj/effect/proc_holder/spell/invoked/abyssor_undertow::name		= /obj/effect/proc_holder/spell/invoked/abyssor_undertow,
 		/datum/action/cooldown/spell/ravox/withstand::name					= /datum/action/cooldown/spell/ravox/withstand,
 		/datum/action/cooldown/spell/mending/malum::name					= /datum/action/cooldown/spell/mending/malum,
-		/datum/action/cooldown/spell/noc/TAenlightenment::name				= /datum/action/cooldown/spell/noc/TAenlightenment,
+		/datum/action/cooldown/spell/noc/TAinspiration::name					= /datum/action/cooldown/spell/noc/TAinspiration,
 		/obj/effect/proc_holder/spell/invoked/vendetta::name				= /obj/effect/proc_holder/spell/invoked/vendetta,
 	)
+
+/turf/examine(mob/user)
+	. = ..()
+	var/lumamount = get_lumcount()
+	. += span_info("[lumamount]")

@@ -105,15 +105,16 @@
 	worshippers = "Жрецы Патриархата Двергейла, маги, ученые, писцы, амбициозные личности, исследователи."
 	miracles = list(/datum/action/cooldown/spell/touch/orison				= CLERIC_ORI,
 					/datum/action/cooldown/spell/noc/nitevision				= CLERIC_T0,
-					/datum/action/cooldown/spell/noc/TAenlightenment		= CLERIC_T1,
+					/datum/action/cooldown/spell/noc/TAinspiration			= CLERIC_T1,
+					/datum/action/cooldown/spell/noc/TAstep_in_the_shadow	= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
-					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
 					/datum/action/cooldown/spell/noc/TAblindness			= CLERIC_T2,
-					/datum/action/cooldown/spell/noc/TAinspiration			= CLERIC_T2,
-					/datum/action/cooldown/spell/noc/TAmoonscorch			= CLERIC_T3,
+					/datum/action/cooldown/spell/noc/enlightenment			= CLERIC_T2,
+					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
 					/datum/action/cooldown/spell/noc/TAspellpack			= CLERIC_T3,
-					/datum/action/cooldown/spell/noc/TAbless				= CLERIC_T3,
+					/datum/action/cooldown/spell/noc/TAsilence				= CLERIC_T3,
+					/datum/action/cooldown/spell/noc/TAmoonlight			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/resurrect/noc		= CLERIC_T4,
 	)
 	confess_lines = list(
