@@ -7,7 +7,7 @@
 /////////////////////////
 
 /datum/action/cooldown/spell/noc/nitevision
-	naem = "Ночное зрение"
+	name = "Ночное зрение"
 	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "darkvision"
 	desc = "Дарует вам и людям вокруг ночное зрение."
@@ -394,7 +394,7 @@
 	name = "Arcyne Affinity"
 	desc = "Allows you to learn a spellpack. \n \
 	<b>MAGISTER</b>: Arc Bolt, Spit Fire, Arcyne Lance \n \
-	<b>CONTROLLER</b>: Frost Bolt, Geas, Gravity, Wither, Grasp \n \
+	<b>CONTROLLER</b>: Frost Bolt, Geas, Gravity, Wither \n \
 	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Mindlink"
 	button_icon_state = "spellpack"
 	click_to_activate = FALSE
@@ -419,7 +419,6 @@
 		/datum/action/cooldown/spell/geas,
 		/datum/action/cooldown/spell/gravity,
 		/datum/action/cooldown/spell/wither,
-		/datum/action/cooldown/spell/augment_buff/grasp,
 	// Seer - support and help
 	)
 	var/list/seer_bundle = list(
@@ -428,7 +427,6 @@
 		/datum/action/cooldown/spell/augment_buff/fortitude,
 		/datum/action/cooldown/spell/arcyne_forge,
 		/datum/action/cooldown/spell/mending,
-		/datum/action/cooldown/spell/mindlink,
 		/datum/action/cooldown/spell/lesser_knock,
 	)
 
