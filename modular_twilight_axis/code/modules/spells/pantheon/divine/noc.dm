@@ -7,6 +7,7 @@
 /////////////////////////
 
 /datum/action/cooldown/spell/noc/nitevision
+	naem = "Ночное зрение"
 	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "darkvision"
 	desc = "Дарует вам и людям вокруг ночное зрение."
@@ -23,7 +24,7 @@
 	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "noc_gaze"
-	cooldown_time = 30 SECONDS
+	cooldown_time = 40 SECONDS
 	charge_required = TRUE
 	charge_time = 1 SECONDS
 	charge_slowdown = 0
@@ -148,12 +149,104 @@
 	return FALSE
 
 /////////////////////////
-// T2 - Enlightenment. //
+// T2 - Nite Owl. //
 ////////////////////////
 
-/datum/action/cooldown/spell/noc/enlightenment
-	invocation_type = "Дай мне свой совет."
+/datum/action/cooldown/spell/projectile/nite_owl
+	name = "Ночная сова"
+	desc = "Направьте на врага ночную сову, которая попытается замедлить его и затушить весь свет."
+	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "noc_sight"
+	glow_intensity = NONE
+	attunement_school = null
+
+	projectile_type = /obj/projectile/magic/nite_owl
+	cast_range = SPELL_RANGE_PROJECTILE
+
+	primary_resource_type = SPELL_COST_DEVOTION
+	primary_resource_cost = SPELLCOST_MIRACLE
+
+	secondary_resource_type = SPELL_COST_STAMINA
+	secondary_resource_cost = SPELLCOST_MAJOR_PROJECTILE
+
+	invocations = list("Да поможет мне друг Луны.")
+	invocation_type = INVOCATION_WHISPER
+
+	ignore_armor_penalty = TRUE
+	charge_required = TRUE
+	charge_time = 1 SECONDS
+	hold_drain = 1
+	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
+	cooldown_time = 45 SECONDS
+
+	associated_stat = null
+	associated_skill = /datum/skill/magic/holy
+	spell_tier = 0
+
+	point_cost = 0
+
+	spell_impact_intensity = SPELL_IMPACT_MEDIUM
+
+	required_items = list(/obj/item/clothing/neck/roguetown/psicross/noc, /obj/item/clothing/neck/roguetown/psicross/silver/noc, /obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)
+
+/obj/projectile/magic/nite_owl
+	name = "nite owl"
+	icon = 'icons/obj/magic_projectiles.dmi'
+	icon_state = "nite_owl"//Someone make a better sprite for this someday.
+	damage = 30
+	nodamage = FALSE
+	range = 8
+	hitsound = 'sound/magic/owlhoot.ogg'
+	guard_deflectable = TRUE
+	expose_caster_on_deflect = TRUE
+
+/obj/projectile/magic/nite_owl/on_hit(target, blocked = FALSE)
+	if(ismob(target))
+		var/mob/living/M = target
+		if(M.anti_magic_check(TRUE, TRUE))
+			visible_message(span_warning("[src] fizzles on contact with [target]!"))
+			playsound(get_turf(target), 'sound/magic/magic_nulled.ogg', 100)
+			qdel(src)
+			return BULLET_ACT_BLOCK
+		if(blocked >= 100)
+			return ..()
+		if(M.has_status_effect(/datum/status_effect/debuff/TAnite_owl))
+			qdel(src)
+			return BULLET_ACT_BLOCK
+		M.apply_status_effect(/datum/status_effect/debuff/TAnite_owl)
+		playsound(get_turf(target), hitsound, 60, TRUE)
+	return ..()
+
+/datum/status_effect/debuff/TAnite_owl
+	id = "nite_owl"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAnite_owl
+	effectedstats = list(STATKEY_SPD = -3)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/TAnite_owl/on_apply()
+	if(!owner.mind)
+		owner.Immobilize(5 SECONDS)
+
+	for(var/obj/O in range(1, owner))
+		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+			continue
+		if(istype(O, /obj/item/flashlight/flare/light))
+			qdel(O)
+		O.extinguish()
+
+	for(var/mob/M in range(1, owner))
+		for(var/obj/O in M.contents)
+			if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
+				continue
+			if(istype(O, /obj/item/flashlight/flare/light))
+				qdel(O)
+			O.extinguish()
+	return ..()
+
+/atom/movable/screen/alert/status_effect/debuff/TAnite_owl
+	name = "Ночная сова"
+	desc = "Вы ощущаете её арканное присутствие рядом, но не можете понять, где она..."
 
 /////////////////////
 // T2 - Blindness. //
@@ -231,6 +324,8 @@
 ////////////////////////
 
 /datum/action/cooldown/spell/noc/invisibility
+	name = "Невидимость"
+	desc = "Сделайте себя (или другого человека) невидимым на короткое время. Заклинания, атаки или получение урона снимают невидимость."
 	hide_charge_effect = TRUE
 
 ////////////////////////
@@ -242,6 +337,7 @@
 	desc = "Закройте жертве рот - жертва не произнесёт ни слова, будь это чтение заклинания или оскорбление. \
 		Длительность зависит от уровня чудес."
 	button_icon_state = "silence"
+	self_cast_possible = FALSE
 	cooldown_time = 60 SECONDS
 	charge_time = 1 SECONDS
 	cast_range = 7
@@ -332,7 +428,8 @@
 		/datum/action/cooldown/spell/augment_buff/fortitude,
 		/datum/action/cooldown/spell/arcyne_forge,
 		/datum/action/cooldown/spell/mending,
-		/datum/action/cooldown/spell/mindlink
+		/datum/action/cooldown/spell/mindlink,
+		/datum/action/cooldown/spell/lesser_knock,
 	)
 
 /datum/action/cooldown/spell/noc/TAspellpack/cast(atom/cast_on)
@@ -488,8 +585,3 @@
 		/datum/action/cooldown/spell/noc/TAinspiration::name					= /datum/action/cooldown/spell/noc/TAinspiration,
 		/obj/effect/proc_holder/spell/invoked/vendetta::name				= /obj/effect/proc_holder/spell/invoked/vendetta,
 	)
-
-/turf/examine(mob/user)
-	. = ..()
-	var/lumamount = get_lumcount()
-	. += span_info("[lumamount]")

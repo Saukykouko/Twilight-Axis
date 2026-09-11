@@ -110,7 +110,7 @@
 					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/TAblindness			= CLERIC_T2,
-					/datum/action/cooldown/spell/noc/enlightenment			= CLERIC_T2,
+					/datum/action/cooldown/spell/projectile/nite_owl		= CLERIC_T2,
 					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
 					/datum/action/cooldown/spell/noc/TAspellpack			= CLERIC_T3,
 					/datum/action/cooldown/spell/noc/TAsilence				= CLERIC_T3,
