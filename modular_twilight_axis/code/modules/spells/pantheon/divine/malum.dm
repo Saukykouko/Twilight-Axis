@@ -414,8 +414,8 @@
 	chargedloop = null
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	sound = 'sound/magic/heal.ogg'
-	invocations = list("May the malum bless you to work from morning till night, and may there be magma in your eyes, and a flame in your heart!")
-	invocation_type = "none"
+	invocations = list("Да благословит тебя Малум работать день и ночь, и будет жар в твоих глазах, и магма в сердце!")
+	invocation_type = INVOCATION_SHOUT
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
 	recharge_time = 2 MINUTES
