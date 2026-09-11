@@ -24,9 +24,12 @@
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "noc_gaze"
 	cooldown_time = 30 SECONDS
-	invocation_type = INVOCATION_NONE
-	charge_sound = null
 	charge_required = TRUE
+	charge_time = 1 SECONDS
+	charge_slowdown = 0
+	charge_sound = null
+	hide_charge_effect = TRUE
+	invocation_type = INVOCATION_NONE
 	hold_drain = 1
 	spell_color = NONE
 	glow_intensity = NONE
@@ -37,13 +40,11 @@
 	primary_resource_type = SPELLCOST_MIRACLE_MAJOR
 	secondary_resource_type = SPELLCOST_TELEPORT
 	has_visual_effects = FALSE
-	hide_charge_effect = TRUE
 	spell_impact_intensity = SPELL_IMPACT_NONE
 	associated_stat = null
 	associated_skill = /datum/skill/magic/holy
 	spell_tier = 0
 	point_cost = 0
-	charge_slowdown = 0
 	var/max_range = 6
 	var/phase = /obj/effect/temp_visual/blink/shadowstep
 
@@ -319,7 +320,6 @@
 	)
 	// Controller - debuffs
 	var/list/controller_bundle = list(
-		/datum/action/cooldown/spell/projectile/frost_bolt,
 		/datum/action/cooldown/spell/geas,
 		/datum/action/cooldown/spell/gravity,
 		/datum/action/cooldown/spell/wither,
