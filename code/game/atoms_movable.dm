@@ -171,7 +171,7 @@
 		var/mob/M = AM
 		log_combat(src, M, "grabbed", addition="passive grab")
 		if(M.doing)
-			M.doing = FALSE
+			M.stop_all_doing() // TA EDIT
 		if(!supress_message)
 			M.visible_message("<span class='warning'>[src] [M.cmode ? "<b>clings</b> onto" : "grabs"] [M].</span>", \
 				"<span class='danger'>[src] grabs onto you.</span>")
@@ -399,6 +399,13 @@
 	if(. && pulled && pulledby == pulled && pulled.cmode && pulled.grab_state < GRAB_AGGRESSIVE) //NICHE case of being in a first tier grab state.
 		if(!pulledby || QDELETED(pulledby))
 			return
+
+		if(HAS_TRAIT(pulled, TRAIT_PACIFISM))
+			to_chat(pulled, span_notice("I don't resist as [src] pulls away."))
+			to_chat(pulledby, span_notice("I brush [src] aside and move off."))
+			pulled.stop_pulling()
+			return
+
 		if(pulledby.anchored)
 			pulledby.stop_pulling()
 		else
