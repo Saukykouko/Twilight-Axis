@@ -1,0 +1,108 @@
+/obj/item/clothing/shoes/roguetown/boots/armor/iron/twilight_elven
+	name = "elven rider boots"
+	desc = "Comfortable leather boots, reinforced with metal plates for extra protection. Crafted by elven masters, based on a design lost to ages."
+	icon_state = "elven_boots"
+	item_state = "elven_boots"
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+
+/obj/item/clothing/shoes/roguetown/boots/hammerhold_boots
+	name = "hammerhold boots"
+	desc = ""
+	icon_state = "boots"
+	item_state = "boots"
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+
+/obj/item/clothing/shoes/roguetown/hammerhold_shoes
+	name = "hammerhold shoes"
+	desc = ""
+	icon_state = "shoes"
+	item_state = "shoes"
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+
+/obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots
+	name = "etruscan jackboots"
+	//dropshrink = 0.75
+	desc = "High boots that are both beautiful and comfortable."
+	icon_state = "etrboots"
+	item_state = "etrboots"
+	sewrepair = TRUE
+	armor = ARMOR_CLOTHING
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	allowed_sex = list(FEMALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES
+
+/obj/item/clothing/shoes/roguetown/boots/leather/twilight_etruscan_boots/heavy
+	max_integrity = 100
+	armor = ARMOR_LEATHER
+	color = null
+	allowed_sex = list(FEMALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES
+
+/obj/item/clothing/shoes/roguetown/boots/leather/etrbootsm
+	name = "wanderer's boots"
+	desc = "A comfortable pair of boots for traveling and attending court events."
+	icon_state = "etrbootsm"
+	item_state = "etrbootsm"
+	sewrepair = TRUE
+	armor = ARMOR_LEATHER
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	allowed_sex = list(MALE)
+	allowed_race = NON_DWARVEN_RACE_TYPES
+
+/obj/item/clothing/shoes/roguetown/boots/armor/twilight_drow
+	name = "scourge plated boots"
+	desc = "Sabatons forged of blessed avantyne, to be donned by those who would be Her vanguard in the End of Times. Whether they actually are is another matter entirely."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	icon_state = "shadowboots"
+	item_state = "shadowboots"
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	smeltresult = /obj/item/ingot/drow
+
+/obj/item/clothing/shoes/roguetown/boots/bloodboots
+	name = "raiders boots"
+	desc = "Custom-fitted sabatons, made from a series of interlinking darksteel plates. "
+	body_parts_covered = FEET
+	icon_state = "bloodboots"
+	item_state = "bloodboots"
+	color = null
+	blocksound = PLATEHIT
+	resistance_flags = FIRE_PROOF
+	max_integrity = ARMOR_INT_SIDE_STEEL
+	armor = ARMOR_PLATE
+	pickup_sound = 'sound/foley/equip/equip_armor_plate.ogg'
+	equip_sound = 'sound/foley/equip/equip_armor_plate.ogg'
+	anvilrepair = /datum/skill/craft/armorsmithing
+	sewrepair = FALSE
+	smeltresult = /obj/item/ingot/steel
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+
+/obj/item/clothing/shoes/roguetown/boots/bloodboots/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/shoes/roguetown/boots/bloodboots/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate
+	name = "legate's caligae"
+	desc = "Сделанные в форме сандалий сабатоны, выкованные из ценной черной стали. Когда-то это были шлемы гордых рыцарей Грензельхофта, теперь же в них маршируют по горячему песку Зибантии. \
+	</br>‎  </br>Символы чужой гордости и былого величия ныне стали лишь грязью под ногами победителей. Помни об этом, когда будешь воздвигать свой собственный монумент."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	icon_state = "lplateboots"
+	item_state = "lplateboots"

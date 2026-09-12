@@ -6,6 +6,7 @@
 		"Court Magician",\
 		"Marshal",\
 		"Knight",\
+		"Royal Knight", \
 		"Bishop",\
 		"Martyr",\
 		"Keeper",\
@@ -17,6 +18,20 @@
 		"Wretch",\
 		"Gnoll",\
 		"Veteran",\
+		"Guildmaster",\
+		"Court Magician",\
+		"Keeper",\
+		"Orthodoxist",\
+		"Druid",\
+		"Acolyte",\
+		"Man at Arms",\
+		"Royal Guard Sergeant",\
+		"Royal Guard",\
+		"Vanguard", \
+		"Overseer",\
+		"Watchman", \
+		"Town Watch", \
+		"Squire",\
 	)
 
 #define DEFAULT_ANTAG_BLACKLISTED_COMBAT_ROLES list(\
