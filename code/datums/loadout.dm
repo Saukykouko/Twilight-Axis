@@ -4884,6 +4884,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/fancyjacket/triumph_padded
 
+/datum/loadout_item/shalwarpants
+	name = "Shalwar Pants"
+	category = "Одежда"
+	path = /obj/item/clothing/under/roguetown/tights/shalwar
+
 /datum/loadout_item/greendress
 	name = "Light Green Dress"
 	category = "Одежда"
@@ -5163,3 +5168,9 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/donator_koruu_astrataclerichelm
 	donatitem = TRUE
 	donat_tier = 3
+
+/datum/loadout_item/donator/lief_friend
+	name = "Donator Item - Aurum's Amulets"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/neck/roguetown/psicross/liefdonator
+	donatitem = TRUE
