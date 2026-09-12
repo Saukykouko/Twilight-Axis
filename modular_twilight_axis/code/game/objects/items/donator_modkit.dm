@@ -290,10 +290,10 @@
 
 /obj/item/enchantingkit/crowcane_blade
 	name = "'Crow Cane Blade' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Rapier or Sabre."
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Rapier or Decorated Sabre."
 	target_items = list(
-		/obj/item/rogueweapon/sword/rapier = /obj/item/rogueweapon/sword/rapier/crowcane,
-		/obj/item/rogueweapon/sword/sabre = /obj/item/rogueweapon/sword/sabre/crowcane)
+		/obj/item/rogueweapon/sword/rapier/dec = /obj/item/rogueweapon/sword/rapier/crowcane,
+		/obj/item/rogueweapon/sword/sabre/dec = /obj/item/rogueweapon/sword/sabre/crowcane)
 	exact_type = TRUE
 	icon_loadout = /obj/item/rogueweapon/sword/rapier/crowcane
 
@@ -303,8 +303,8 @@
 
 /obj/item/enchantingkit/crowcane_scabbard
 	name = "'Crow Cane Scabbard' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Simple Scabbard."
-	target_items = list(/obj/item/rogueweapon/scabbard/sword)
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Scabbard, Golden."
+	target_items = list(/obj/item/rogueweapon/scabbard/sword/royal)
 	result_item = /obj/item/rogueweapon/scabbard/sword/crowcane
 	exact_type = TRUE
 	icon_loadout = /obj/item/rogueweapon/scabbard/sword/crowcane

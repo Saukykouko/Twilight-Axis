@@ -290,6 +290,7 @@
 	TI.twirl_speed = RI::twirl_speed
 	TI.twirl_verb = RI::twirl_verb
 	TI.twirl_sound = RI::twirl_sound
+	TI.twirl_flourish_sound = RI::twirl_flourish_sound
 	TI.twirl_cmode = RI::twirl_cmode
 	TI.fumble_chance = RI::fumble_chance
 
@@ -911,7 +912,7 @@
 //Ryan180602 - Naginata
 /obj/item/enchantingkit/weapon/ryan_naginata
 	name = "'+5 common profane naginata' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of most polearms."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Spear or Halberd."
 	target_items = list(
 		/obj/item/rogueweapon/spear,
 		/obj/item/rogueweapon/halberd
@@ -1005,6 +1006,7 @@
 //DRD21 - Princely Implements
 /obj/item/enchantingkit/drd_rapier
 	name = "'Mære' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Steel Rapier."
 	target_items = list(
 		/obj/item/rogueweapon/sword/rapier
 	)
@@ -1303,11 +1305,13 @@
 //limetease - Greatsword/Halberd
 /obj/item/enchantingkit/limetease_swordspear
 	name = "'avantyne-threaded sword' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Greatsword or Halberd."
 	target_items = list(
 		/obj/item/rogueweapon/greatsword	= /obj/item/rogueweapon/greatsword/limetease,
 		/obj/item/rogueweapon/halberd		= /obj/item/rogueweapon/halberd/limetease
 	)
 	result_item = null
+	icon_loadout = /obj/item/rogueweapon/greatsword/limetease
 
 //MortoSasye - Ice Staffs
 /obj/item/enchantingkit/morto_staff
@@ -1711,7 +1715,7 @@
 
 /obj/item/enchantingkit/weapon/kadedao
 	name = "'Spring Cometh' morphing elixr"
-	desc = "A small container of special morphing dust, perfect to make a specific item."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Shortsword or Sabre."
 	target_items = list(
 		/obj/item/rogueweapon/sword/short,
 		/obj/item/rogueweapon/sword/sabre
@@ -1799,6 +1803,7 @@
 		/obj/item/storage/backpack/rogue/satchel/beltpack			= /obj/item/storage/backpack/rogue/satchel/beltpack/donator_naman
 	)
 	result_item = null
+	icon_loadout = /obj/item/storage/backpack/rogue/satchel/beltpack/donator_naman
 
 /obj/item/enchantingkit/donator_naman_sabre
 	name = "'Noble Sabre' morphing elixir"
@@ -1821,6 +1826,7 @@
 		/obj/item/clothing/suit/roguetown/armor/gambeson/shadowrobe					= /obj/item/clothing/suit/roguetown/armor/gambeson/shadowrobe/donator_sanshoom
 	)
 	result_item = null
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/shadowrobe/donator_sanshoom
 
 /obj/item/enchantingkit/donator_sanshoom_prowlermask
 	name = "'Prowler Halfmask' morphing elixir"
@@ -1850,15 +1856,17 @@
 		/obj/item/clothing/head/roguetown/helmet/heavy/ravoxhelm		= /obj/item/clothing/head/roguetown/helmet/heavy/ravoxhelm/cleric/koruu,
 	)
 	result_item = null
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/ravoxhelm/cleric/koruu
 	exact_type = TRUE
 
 /obj/item/enchantingkit/donator_koruu_astrataclerichelm
 	name = "'Lux In Tenebris' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of an Astratan Helmet."
 	target_items = list(
-		/obj/item/clothing/head/roguetown/helmet/heavy/astratahelm		= /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/cleric/koruu,
+		/obj/item/clothing/head/roguetown/helmet/heavy/astratan		= /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/cleric/koruu,
 	)
 	result_item = null
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/cleric/koruu
 	exact_type = TRUE
 /////////////////////////////
 // ! Triumph-Exc. Kits !   //
