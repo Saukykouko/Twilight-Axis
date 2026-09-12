@@ -421,8 +421,8 @@
 				water_contents = list(/datum/reagent/water/blessed = water_qty)
 			if(caster.patron.name == "Pestra")
 				water_contents = list(/datum/reagent/water/medicine = water_qty)
-			if(caster.patron.name == "Baotha")
-				water_contents = list(/datum/reagent/consumable/ethanol/loversruin = water_qty)
+//			if(caster.patron.name == "Baotha") // TA EDIT
+//				water_contents = list(/datum/reagent/consumable/ethanol/loversruin = water_qty) // TA EDIT
 			var/datum/reagents/reagents_to_add = new()
 			reagents_to_add.add_reagent_list(water_contents)
 			reagents_to_add.trans_to(victim, reagents_to_add.total_volume, transfered_by = caster)
@@ -648,12 +648,13 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 		// however, they can have TRAIT_PSYDONITE as a treat
 		ADD_TRAIT(new_convert, TRAIT_PSYDONITE, ROUNDSTART_TRAIT)
 
-	// give a small mood buff to both parties, identical to prayer; psydonites get the same thing but with more ambiguous wording
-	if(istype(new_convert.patron, /datum/patron/old_god))
-		caster.add_stress(/datum/stressevent/convert/psydon)
-	else
-		caster.add_stress(/datum/stressevent/convert)
-	new_convert.add_stress(/datum/stressevent/convert/recipient)
+	if(!(ispath(new_patron, /datum/patron/divine) && istype(old_patron, /datum/patron/divine))) // sigh.
+		// give a small mood buff to both parties, identical to prayer; psydonites get the same thing but with more ambiguous wording
+		if(istype(new_convert.patron, /datum/patron/old_god))
+			caster.add_stress(/datum/stressevent/convert/psydon)
+		else
+			caster.add_stress(/datum/stressevent/convert)
+		new_convert.add_stress(/datum/stressevent/convert/recipient)
 
 	message_admins("CONVERSION: [caster.real_name] ([caster.ckey]) has converted [new_convert.real_name] ([new_convert.ckey]) to [new_convert.patron.name]")
 	log_game("CONVERSION: [caster.real_name] ([caster.ckey]) converted [new_convert.real_name] ([new_convert.ckey]) to [new_convert.patron.name]")

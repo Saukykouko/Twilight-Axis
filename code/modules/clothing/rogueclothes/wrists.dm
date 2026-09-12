@@ -244,6 +244,7 @@
 	desc = "Sheared burlap and cloth, meticulously fashioned around the forearms. Taut fibers turn weeping gashes into mere tears along the cloth. </br>"
 	color = "#BFB8A9"
 
+
 //Queensleeves
 /obj/item/clothing/wrists/roguetown/royalsleeves
 	name = "royal sleeves"
@@ -654,7 +655,7 @@
 
 /obj/item/clothing/wrists/roguetown/bracers/leather/baotha
 	name = "saccharine cuffs"
-	desc = "A betrayal without compare, and a sin without redemption; or so, She believed.."
+	desc = "The priestess, desperate to relieve the pain of her sickly congregation, attempted to take more than Eora's grace would give; but she was discovered, and the Eleven were incensed."
 	icon_state = "baothabracers"
 	chunkcolor = "#6d1c87"
 	armor = ARMOR_PADDED

@@ -114,6 +114,7 @@
 	var/slurring = 0
 	var/cultslurring = 0
 	var/derpspeech = 0
+	var/feigning_impairment = FALSE // TA EDIT
 
 	var/list/implants = null
 
@@ -256,3 +257,6 @@
 
 	/// Bypasses positioning and exposure checks entirely
 	var/freeuse = FALSE
+
+	/// Inquisition trauma should only happen once per examined.
+	var/list/examined_inquisitors = list()

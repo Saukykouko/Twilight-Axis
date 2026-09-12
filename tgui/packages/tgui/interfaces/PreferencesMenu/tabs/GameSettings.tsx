@@ -6,6 +6,7 @@ import {
 } from 'pm/components';
 import type { Antag, GameSettingsData } from 'pm/data';
 import { useBackendStrict } from 'tgui/backend';
+import type { BooleanLike } from 'tgui-core/react';
 import {
   Box,
   Button,
@@ -15,7 +16,14 @@ import {
   Stack,
 } from 'tgui-core/components';
 
-export const GameSettings = (props) => {
+type DonorGameSettingsData = GameSettingsData & {
+  donor_visuals: BooleanLike;
+  donor_ooc_color: BooleanLike;
+  donor_ooc_icon: BooleanLike;
+  donor_examine_icon: BooleanLike;
+};
+
+export const GameSettings = () => {
   return (
     <Section
       fill
@@ -44,8 +52,8 @@ export const GameSettings = (props) => {
   );
 };
 
-const Settings = (props) => {
-  const { act, data } = useBackendStrict<GameSettingsData>();
+const Settings = () => {
+  const { act, data } = useBackendStrict<DonorGameSettingsData>();
   const {
     tgui_theme,
     parchment_skin,
@@ -57,6 +65,10 @@ const Settings = (props) => {
     auto_fit_viewport,
     schizo_voice,
     verbose_character_creator,
+    donor_visuals,
+    donor_ooc_color,
+    donor_ooc_icon,
+    donor_examine_icon,
   } = data;
 
   return (
@@ -138,12 +150,40 @@ const Settings = (props) => {
             {schizo_voice ? 'Yes' : 'No'}
           </Button>
         </LabeledGridList.Item>
+        {donor_visuals ? (
+          <>
+            <LabeledGridList.Item
+              label="OOC Donator Color"
+              tooltip="Show or hide your donator color in OOC."
+            >
+              <Button onClick={() => act('donor_ooc_color')}>
+                {donor_ooc_color ? 'Enabled' : 'Disabled'}
+              </Button>
+            </LabeledGridList.Item>
+            <LabeledGridList.Item
+              label="OOC Donator Icon"
+              tooltip="Show or hide your donator icon in OOC."
+            >
+              <Button onClick={() => act('donor_ooc_icon')}>
+                {donor_ooc_icon ? 'Enabled' : 'Disabled'}
+              </Button>
+            </LabeledGridList.Item>
+            <LabeledGridList.Item
+              label="Examine Donator Icon"
+              tooltip="Show or hide your donator icon in TGUI examine."
+            >
+              <Button onClick={() => act('donor_examine_icon')}>
+                {donor_examine_icon ? 'Enabled' : 'Disabled'}
+              </Button>
+            </LabeledGridList.Item>
+          </>
+        ) : null}
       </LabeledGridList>
     </Section>
   );
 };
 
-const SpecialRoles = (props) => {
+const SpecialRoles = () => {
   const { act, data } = useBackendStrict<GameSettingsData>();
   const { antags, no_storyteller_events } = data;
 
@@ -212,7 +252,7 @@ const AntagListItem = (props: { antag: Antag }) => {
   );
 };
 
-const AdminPreferences = (props) => {
+const AdminPreferences = () => {
   const { act, data } = useBackendStrict<GameSettingsData>();
 
   if (!data.admin_prefs) {

@@ -44,6 +44,7 @@
 	)
 	subclass_stashed_items = list(
 		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
 	)
 /datum/outfit/job/roguetown/wretch/munitioneer/pre_equip(mob/living/carbon/human/H)
 	to_chat(H, span_warning("You are a passable warrior- though weak- but your true strength lies in your ability to bend the resources of Azuria to your will."))
@@ -99,11 +100,11 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE)
 			if(crimeschoice == "They fear me")
 				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy)
-				H.equip_to_slot_or_del(new /obj/item/quiver/bolt/heavy/bronze, SLOT_BELT_L, TRUE)
+				H.put_in_hands(new /obj/item/quiver/bolt/heavy/bronze)
 				H.change_stat(STATKEY_STR, 1)
 			else
 				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow)
-				H.equip_to_slot_or_del(new /obj/item/quiver/bolt/standard, SLOT_BELT_L, TRUE)
+				H.put_in_hands(new /obj/item/quiver/bolt/standard)
 		if("Path of the Pick - Pulaski Axe")
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 			if(crimeschoice == "They fear me")

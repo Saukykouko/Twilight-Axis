@@ -180,41 +180,76 @@
 /**
 	* Makes you speak like you're drunk
 	*/
-/proc/slur(n)
+/proc/slur(n) // TA EDIT START
 	var/phrase = STRIP_HTML_SIMPLE(n, MAX_MESSAGE_LEN)
 	var/leng = length_char(phrase)
-	var/counter=length_char(phrase)
-	var/newphrase=""
-	var/newletter=""
-	while(counter>=1)
-		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
-		if(rand(1,3)==3)
-			if(LOWER_TEXT(newletter)=="o")
-				newletter="u"
-			if(LOWER_TEXT(newletter)=="s")
-				newletter="ch"
-			if(LOWER_TEXT(newletter)=="a")
-				newletter="ah"
-			if(LOWER_TEXT(newletter)=="u")
-				newletter="oo"
-			if(LOWER_TEXT(newletter)=="c")
-				newletter="k"
-		if(rand(1,20)==20)
-			if(newletter==" ")
-				newletter="...huuuhhh..."
-			if(newletter==".")
-				newletter=" *BURP*."
-		switch(rand(1,20))
-			if(1)
-				newletter+="'"
-			if(10)
-				newletter+="[newletter]"
-			if(20)
-				newletter+="[newletter][newletter]"
-			else
-				;;
-		newphrase+="[newletter]";counter-=1
-	return newphrase
+	var/has_cyrillic = FALSE
+	for(var/i = 1 to leng)
+		var/checkletter = LOWER_TEXT(copytext_char(phrase, i, i + 1))
+		if(checkletter in list("а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"))
+			has_cyrillic = TRUE
+			break
+
+	var/counter = leng
+	var/newphrase = ""
+	var/newletter = ""
+	while(counter >= 1)
+		newletter = copytext_char(phrase, (leng - counter) + 1, (leng - counter) + 2)
+		var/lowerletter = LOWER_TEXT(newletter)
+
+		if(has_cyrillic)
+			if(prob(20))
+				switch(lowerletter)
+					if("с")
+						newletter = (newletter == uppertext(newletter)) ? "Ш" : "ш"
+					if("з")
+						newletter = (newletter == uppertext(newletter)) ? "Ж" : "ж"
+					if("ц")
+						newletter = (newletter == uppertext(newletter)) ? "С" : "с"
+					if("ч")
+						newletter = (newletter == uppertext(newletter)) ? "Щ" : "щ"
+
+			if(lowerletter in list("а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я"))
+				if(prob(12))
+					newletter += newletter
+					if(prob(20))
+						newletter += copytext_char(newletter, 1, 2)
+			else if(lowerletter in list("б", "в", "г", "д", "ж", "з", "к", "л", "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ч", "ш", "щ"))
+				if(prob(4))
+					newletter += newletter
+
+			if(newletter == " " && prob(7))
+				newletter = "... э-э... "
+			else if(newletter == "." && prob(5))
+				newletter = " *ИК*."
+		else
+			if(rand(1, 3) == 3)
+				if(lowerletter == "o")
+					newletter = "u"
+				if(lowerletter == "s")
+					newletter = "ch"
+				if(lowerletter == "a")
+					newletter = "ah"
+				if(lowerletter == "u")
+					newletter = "oo"
+				if(lowerletter == "c")
+					newletter = "k"
+			if(rand(1, 20) == 20)
+				if(newletter == " ")
+					newletter = "...huuuhhh..."
+				if(newletter == ".")
+					newletter = " *BURP*."
+			var/repeat_roll = rand(1, 20)
+			if(repeat_roll == 1)
+				newletter += "'"
+			else if(repeat_roll == 10)
+				newletter += "[newletter]"
+			else if(repeat_roll == 20)
+				newletter += "[newletter][newletter]"
+
+		newphrase += "[newletter]"
+		counter -= 1
+	return copytext_char(newphrase, 1, MAX_MESSAGE_LEN) // TA EDIT END
 
 /// Makes you talk like you got cult stunned, which is slurring but with some dark messages
 // Except up, its Psyphied so this is what you get from being sundered instead, thank you whoever left this, I will cook.
@@ -734,6 +769,8 @@
 	update_inv_hands()
 
 
+#define CMODE_SHAKE_ANIMATION "cmode_shake"
+
 /mob/verb/toggle_cmode()
 	set name = "cmode-change"
 	set hidden = 1
@@ -741,15 +778,17 @@
 	if(SSticker.current_state >= GAME_STATE_FINISHED)
 		return
 
-	var/mob/living/L
-	if(isliving(src))
-		L = src
+	if(!isliving(src))
+		return
+	var/mob/living/L = src
 	var/client/client = L.client
 	if(L.IsSleeping() || L.surrendering)
 		if(cmode)
 			playsound_local(src, 'sound/misc/comboff.ogg', 100)
 			SSdroning.play_area_sound(get_area(src), client)
 			cmode = FALSE
+			if(client)
+				animate(client, tag = CMODE_SHAKE_ANIMATION)
 		if(hud_used)
 			if(hud_used.cmode_button)
 				hud_used.cmode_button.update_icon()
@@ -758,8 +797,8 @@
 		playsound_local(src, 'sound/misc/comboff.ogg', 100)
 		SSdroning.play_area_sound(get_area(src), client)
 		cmode = FALSE
-		if(client && HAS_TRAIT(src, TRAIT_SCREENSHAKE))
-			animate(client, pixel_y)
+		if(client)
+			animate(client, tag = CMODE_SHAKE_ANIMATION)
 	else
 		cmode = TRUE
 		playsound_local(src, 'sound/misc/combon.ogg', 100)
@@ -767,13 +806,19 @@
 			SSdroning.play_combat_music(L.cmode_music_override, client)
 		else if(L.cmode_music)
 			SSdroning.play_combat_music(L.cmode_music, client)
-		if(client && HAS_TRAIT(src, TRAIT_PSYCHOSIS))
-			animate(client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
+		if(client && (HAS_TRAIT(src, TRAIT_PSYCHOSIS) || HAS_TRAIT(src, TRAIT_SCREENSHAKE)))
+			animate(client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE, tag = CMODE_SHAKE_ANIMATION)
 			animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
+			if(HAS_TRAIT(src, TRAIT_PSYCHOSIS) && !HAS_TRAIT(src, TRAIT_SCREENSHAKE))
+				spawn(4 SECONDS)
+					if(cmode && client)
+						animate(client, tag = CMODE_SHAKE_ANIMATION)
 	if(hud_used)
 		if(hud_used.cmode_button)
 			hud_used.cmode_button.update_icon()
 	on_cmode()
+
+#undef CMODE_SHAKE_ANIMATION
 
 /mob/proc/on_cmode()
 	return
