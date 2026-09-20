@@ -193,9 +193,10 @@
 /obj/projectile/magic/nite_owl
 	name = "nite owl"
 	icon = 'icons/obj/magic_projectiles.dmi'
-	icon_state = "nite_owl"//Someone make a better sprite for this someday.
+	icon_state = "nite_owl"
 	damage = 30
 	nodamage = FALSE
+	damage_type = BRUTE
 	range = 8
 	hitsound = 'sound/magic/owlhoot.ogg'
 	guard_deflectable = TRUE
@@ -242,6 +243,9 @@
 			if(istype(O, /obj/item/flashlight/flare/light))
 				qdel(O)
 			O.extinguish()
+
+	if(owner.has_status_effect(/datum/status_effect/light_buff))
+		owner.remove_status_effect(/datum/status_effect/light_buff)
 	return ..()
 
 /atom/movable/screen/alert/status_effect/debuff/TAnite_owl
@@ -354,6 +358,9 @@
 		if(target.anti_magic_check(TRUE, TRUE))
 			to_chat(caster, span_warning("The spell fizzles, it won't work on them!"))
 			return FALSE
+		if(spell_guard_check(target, TRUE))
+			cast_on.visible_message(span_warning("[cast_on] shields against the void!"))
+			return TRUE
 		var/assocskill = caster.get_skill_level(associated_skill)
 		target.apply_status_effect(/datum/status_effect/debuff/TAmute, assocskill)
 		return TRUE
@@ -395,7 +402,7 @@
 	desc = "Allows you to learn a spellpack. \n \
 	<b>MAGISTER</b>: Arc Bolt, Spit Fire, Arcyne Lance \n \
 	<b>CONTROLLER</b>: Geas, Gravity, Wither \n \
-	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Mindlink"
+	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Lesser Knock"
 	button_icon_state = "spellpack"
 	click_to_activate = FALSE
 	primary_resource_cost = SPELLCOST_MIRACLE
