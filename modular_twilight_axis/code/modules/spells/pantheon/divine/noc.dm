@@ -51,13 +51,11 @@
 
 /datum/action/cooldown/spell/noc/TAstep_in_the_shadow/cast(atom/cast_on)
 	. = ..()
-	/*
 	var/turf/T = get_turf(cast_on)
 	var/turf/start = get_turf(owner)
 	if(T.get_lumcount() > 0.25 || start.get_lumcount() > 0.25)
 		to_chat(owner, span_warning("There is too much light!"))
 		return FALSE
-	*/
 
 	var/dest_err = arcyne_validate_blink_dest(T, owner)
 	if(dest_err)
