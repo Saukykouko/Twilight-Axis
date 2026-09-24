@@ -161,4 +161,13 @@
 		mind.AddSpell(new /obj/effect/proc_holder/spell/self/suicidebomb/lesser)
 		grant_poke_spell_zizo(src)
 
+	visible_message(
+		span_boldwarning("[src]'s flesh burns away in necrotic flames, revealing bone beneath as they are consumed by the Lesser Work!"),
+		span_notice("THE LESSER WORK IS DONE! My flesh is forfeit - and death itself answers my call!")
+	)
+
+	to_chat(src, span_purple("You have performed the Rituos to perfection. You should be a full-fledged Lich by now... and yet..."))
+	sleep(30)
+	to_chat(src, "<i>...Vestiges of mortality still cling to me...? Why?</i>")
+
 // TA ADDITION END - T3 Miracle Rituos can be used to become a real skeleton.
