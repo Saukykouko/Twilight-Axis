@@ -75,8 +75,6 @@
 // TA ADDITION START - T3 Miracle Rituos can be used to become a real skeleton.
 /mob/living/carbon/human/proc/become_skeleton_zizo()
 	to_chat(src, span_warning("You decide to become true undead!"))
-	var/had_godmode = (status_flags & GODMODE)
-	status_flags |= GODMODE
 	if(isdullahan(src))
 		var/obj/item/bodypart/head/old_head = get_bodypart(BODY_ZONE_HEAD)
 		if(old_head)
@@ -84,8 +82,6 @@
 			new_head.replace_limb(src, TRUE)
 			qdel(old_head)
 	set_species(/datum/species/human/northern)
-	if(!had_godmode)
-		status_flags &= ~GODMODE
 
 	for(var/datum/charflaw/cf in charflaws)
 		charflaws.Remove(cf)
@@ -137,7 +133,6 @@
 
 	// Undead language
 	grant_language(/datum/language/undead)
-
 
 	// Offer to clear flavor text / OOC notes since they likely don't match a skeleton
 	if(flavortext || ooc_notes)
