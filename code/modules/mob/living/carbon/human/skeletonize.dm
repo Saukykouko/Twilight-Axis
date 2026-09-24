@@ -81,11 +81,12 @@
 			var/obj/item/bodypart/head/new_head = new /obj/item/bodypart/head()
 			new_head.replace_limb(src, TRUE)
 			qdel(old_head)
-	set_species(/datum/species/human/northern)
-
+	// set_species(/datum/species/human/northern)
+	/*
 	for(var/datum/charflaw/cf in charflaws)
 		charflaws.Remove(cf)
 		QDEL_NULL(cf)
+	*/
 	hairstyle = "Bald"
 	facial_hairstyle = "Shaved"
 	mob_biotypes = MOB_UNDEAD
