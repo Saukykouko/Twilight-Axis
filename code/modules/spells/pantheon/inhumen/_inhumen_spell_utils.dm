@@ -200,7 +200,10 @@
 	to_chat(user, "<i>...Why do I still struggle to comprehend anything beyond a mere grasp of the arcane? What am I missing?</i>")
 
 /datum/action/cooldown/spell/zizo/rituos/proc/apply_unlife_path(mob/living/carbon/human/user, head_too) // TA EDIT - ORIGINAL: .../proc/apply_unlife_path(mob/living/carbon/human/user)
-
+	// TA ADDITION START - T3 miracle can make you a real skeleton
+	if(head_too)
+		user.become_skeleton_zizo()
+	// TA ADDITION END
 	user.mob_biotypes |= MOB_UNDEAD
 
 	ADD_TRAIT(user, TRAIT_NOMOOD, "[type]")
@@ -217,22 +220,9 @@
 	ADD_TRAIT(user, TRAIT_NOWW, "[type]")
 
 	for(var/obj/item/bodypart/part in user.bodyparts)
-		// TA EDIT - ORIGINAL:
-		/*
 		if(istype(part, /obj/item/bodypart/head))
 			continue
-		*/
-		// ORIGINAL END.
-		if(istype(part, /obj/item/bodypart/head))
-			if(head_too)
-				to_chat(user, span_warning("You decide to become true undead!"))
-				ADD_TRAIT(user, TRAIT_SHATTER_KILL, "[type]")
-				ADD_TRAIT(user, TRAIT_SKELETAL_GIB_ON_DEATH, "[type]")
-				user.select_skeleton_features()
-				user.mind.add_antag_datum(new /datum/antagonist/skeleton())
-			else
-				continue
-		// TA EDIT END.
+
 		part.skeletonize(FALSE)
 		user.update_body_parts()
 		playsound(user.loc, 'sound/misc/smelter_sound.ogg', 50, FALSE)
@@ -257,7 +247,6 @@
 		user.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4))
 		user.mind.AddSpell(new /datum/action/cooldown/spell/bonechill)
 		user.mind.AddSpell(new /datum/action/cooldown/spell/bonemend)
-		user.mind.AddSpell(new /obj/effect/proc_holder/spell/self/suicidebomb/lesser) // TA ADDITION
 		grant_poke_spell_zizo(user)
 
 	user.visible_message(
