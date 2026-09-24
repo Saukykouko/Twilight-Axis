@@ -203,6 +203,7 @@
 	// TA ADDITION START - T3 miracle can make you a real skeleton
 	if(head_too)
 		user.become_skeleton_zizo()
+		return FALSE
 	// TA ADDITION END
 	user.mob_biotypes |= MOB_UNDEAD
 
