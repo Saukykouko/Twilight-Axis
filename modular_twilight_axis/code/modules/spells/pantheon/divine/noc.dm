@@ -19,7 +19,7 @@
 
 /datum/action/cooldown/spell/noc/TAstep_in_the_shadow
 	name = "Шаг во тьму"
-	desc = "Позволяет вам быстро и почти бесшумно телепортироваться к цели. Ограничено дальностью в 4 шагов."
+	desc = "Находясь в тени, вы можете быстро телепортироваться в неосвещённое место. Ограничено дальностью в 6 шагов."
 	sound = 'sound/magic/blink.ogg'
 	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
@@ -46,7 +46,7 @@
 	associated_skill = /datum/skill/magic/holy
 	spell_tier = 0
 	point_cost = 0
-	var/max_range = 4
+	var/max_range = 6
 	var/phase = /obj/effect/temp_visual/blink/shadowstep
 
 /datum/action/cooldown/spell/noc/TAstep_in_the_shadow/cast(atom/cast_on)
