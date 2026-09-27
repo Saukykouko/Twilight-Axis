@@ -46,7 +46,7 @@
 	if((!istype(H.patron, /datum/patron/inhumen)) || (istype(H.patron, /datum/patron/inhumen/zizo)))
 		H.set_patron(/datum/patron/inhumen/matthios)	//If you aren't a heretical worshiper, forces you to Matthios worship. (All bandits follow Matthios.)
 	for(var/datum/charflaw/cf in H.charflaws)
-		if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
+		if(istype(cf, /datum/charflaw/targeted)) // TA EDIT - ORIGINAL: if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
 			H.charflaws.Remove(cf)
 			QDEL_NULL(cf)
 	add_verb(H, /mob/proc/haltyell_exhausting)

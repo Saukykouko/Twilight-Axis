@@ -389,6 +389,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		ADD_TRAIT(H, TRAIT_ARMOR_BREAK, TRAIT_GENERIC)
+/* TA REMOVAL START - ORIGINAL:
 /datum/charflaw/hunted
 	name = "Hunted"
 	desc = "Something in my past has made me a target. I'm always looking over my shoulder.	\
@@ -411,6 +412,8 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	..()
 	if(!ishuman(user))
 		return
+*/
+// TA REMOVAL END
 
 /datum/charflaw/targeted
 	name = "Targeted"

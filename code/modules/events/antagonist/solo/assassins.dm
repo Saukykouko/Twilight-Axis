@@ -73,7 +73,7 @@
 /datum/round_event_control/antagonist/solo/assassins/trim_candidates(list/candidates)
 	candidates = ..()
 	for(var/mob/living/candidate in candidates)
-		if(candidate.has_flaw(/datum/charflaw/targeted) || candidate.has_flaw(/datum/charflaw/hunted))
+		if(candidate.has_flaw(/datum/charflaw/targeted)) // TA EDIT - ORIGINAL: if(candidate.has_flaw(/datum/charflaw/targeted) || candidate.has_flaw(/datum/charflaw/hunted))
 			candidates -= candidate
 		// needs to be a gaggarite
 		if(istype(candidate.patron, /datum/patron/inhumen/graggar))

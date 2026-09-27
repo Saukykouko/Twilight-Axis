@@ -43,7 +43,7 @@
 		/datum/advclass/gnoll/templar,
 		/datum/advclass/gnoll/shaman,
 	)
-	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
+	vice_restrictions = list(/datum/charflaw/targeted) // TA EDIT - ORIGINAL: vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
 
 /datum/advclass/gnoll
 	tempo_capable = TRUE
@@ -87,14 +87,14 @@
 		H.AddComponent(/datum/component/gnoll_combat_tracker)
 
 		var/obj/effect/proc_holder/spell/invoked/gnoll_sniff/F = new()
-		var/obj/effect/proc_holder/spell/invoked/invisibility/gnoll/I = new()
-		I.sniff_spell = F // Link them
+		// TA REMOVAL: var/obj/effect/proc_holder/spell/invoked/invisibility/gnoll/I = new()
+		// TA REMOVAL: I.sniff_spell = F // Link them
 
 		var/obj/effect/proc_holder/spell/invoked/abduct/S = new /obj/effect/proc_holder/spell/invoked/abduct()
 		S.destination_turf = get_turf(H) // Set the anchor to where they spawn/don the outfit
 		H.AddSpell(S)
 		H.AddSpell(F)
-		H.AddSpell(I)
+		// TA REMOVAL: H.AddSpell(I)
 
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_DYNAMIC)

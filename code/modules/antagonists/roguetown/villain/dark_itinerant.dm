@@ -17,7 +17,7 @@
 		return
 
 	for(var/datum/charflaw/cf in H.charflaws)
-		if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
+		if(istype(cf, /datum/charflaw/targeted)) // TA EDIT - ORIGINAL: if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
 			H.charflaws.Remove(cf)
 			QDEL_NULL(cf)
 	H.set_patron(/datum/patron/inhumen/zizo)
