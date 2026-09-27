@@ -6,8 +6,6 @@
 		STATKEY_WIL = 3,
 		STATKEY_SPD = 2,
 		STATKEY_STR = 2,
-		STATKEY_INT = 1,
-		STATKEY_PER = 1,
 	)
 
 	subclass_skills = list(
@@ -28,7 +26,7 @@
 	reset_stats = FALSE
 
 	subclass_stats = list(
-		STATKEY_SPD = 3,
+		STATKEY_SPD = 2,
 		STATKEY_PER = 2,
 		STATKEY_WIL = 2,
 		STATKEY_CON = 2,
@@ -87,7 +85,6 @@
 		STATKEY_CON = 5,
 		STATKEY_SPD = 2,
 		STATKEY_INT = 1,
-		STATKEY_PER = 1,
 	)
 
 	subclass_skills = list(
@@ -112,8 +109,8 @@
 		STATKEY_CON = 3,
 		STATKEY_WIL = 3,
 		STATKEY_SPD = 3,
-		STATKEY_INT = -1,
-		STATKEY_PER = -1
+		STATKEY_INT = -2,
+		STATKEY_PER = -2
 	)
 
 	subclass_skills = list(
