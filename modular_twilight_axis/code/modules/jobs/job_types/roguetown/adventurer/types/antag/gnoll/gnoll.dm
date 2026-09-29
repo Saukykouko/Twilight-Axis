@@ -22,6 +22,19 @@
 		/datum/skill/labor/butchering = SKILL_LEVEL_NOVICE,
 	)
 
+/datum/outfit/job/roguetown/gnoll/templar/pre_equip(mob/living/carbon/human/H)
+	if(H.mind)
+		H.set_species(/datum/species/gnoll)
+		H.skin_armor = new vamp_armor_type(H)
+		H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+		neck = /obj/item/storage/belt/rogue/pouch/healing
+		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
+		don_pelt(H)
+		var/datum/devotion/C = new /datum/devotion(H, H.patron)
+		C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, start_maxed = FALSE)
+		H.mind?.AddSpell(new /datum/action/cooldown/spell/convert_heretic)
+		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll)
+
 /datum/advclass/gnoll/shaman
 	reset_stats = FALSE
 
@@ -67,7 +80,6 @@
 		C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MINOR, start_maxed = TRUE)
 		H.mind?.AddSpell(new /datum/action/cooldown/spell/convert_heretic)
 		H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/unholy_blast)
-		H.mind?.RemoveSpell(/obj/effect/proc_holder/spell/self/claws/gnoll)
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll/shaman)
 
 /obj/effect/proc_holder/spell/self/claws/gnoll/shaman
@@ -101,6 +113,16 @@
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
 
+/datum/outfit/job/roguetown/gnoll/knight/pre_equip(mob/living/carbon/human/H)
+	if(H.mind)
+		H.set_species(/datum/species/gnoll)
+		H.skin_armor = new vamp_armor_type(H)
+		H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+		neck = /obj/item/storage/belt/rogue/pouch/healing
+		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
+		don_pelt(H)
+		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll)
+
 /datum/advclass/gnoll/berserker
 	reset_stats = FALSE
 
@@ -126,6 +148,16 @@
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
+
+/datum/outfit/job/roguetown/gnoll/berserker/pre_equip(mob/living/carbon/human/H)
+	if(H.mind)
+		H.set_species(/datum/species/gnoll)
+		H.skin_armor = new vamp_armor_type(H)
+		H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+		neck = /obj/item/storage/belt/rogue/pouch/healing
+		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
+		don_pelt(H)
+		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll)
 
 /datum/species/gnoll
 	inherent_traits = list(
