@@ -83,11 +83,20 @@
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll/shaman)
 
 /obj/effect/proc_holder/spell/self/claws/gnoll/shaman
+	name = "Shaman Claws"
 	claw_type = /obj/item/rogueweapon/werewolf_claw/gnoll/shaman
 
 /obj/item/rogueweapon/werewolf_claw/gnoll/shaman
 	wdefense = 4
 	wbalance = WBALANCE_NORMAL
+
+/obj/item/rogueweapon/werewolf_claw/gnoll/shaman/right
+	icon_state = "claw_r"
+	wlength = WLENGTH_SHORT
+
+/obj/item/rogueweapon/werewolf_claw/gnoll/shaman/left
+	icon_state = "claw_l"
+	wlength = WLENGTH_SHORT
 
 /datum/advclass/gnoll/knight
 	reset_stats = FALSE
