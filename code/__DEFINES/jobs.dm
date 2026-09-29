@@ -141,6 +141,12 @@
 
 #define ATC					(1<<14)
 
+// TA ADDITION START
+#define THIEFGUILD (1<<15)
+
+#define THIEFGUILDMASTER (1<<0)
+// TA ADDITION END
+
 #define TESTER		(1<<0)
 
 
@@ -160,7 +166,7 @@
 #define JCOLOR_ANTAGONIST	"#b8252c"
 // PUT THESE ON THE FIRST ROLE IN THE LIST BELOW (IE NOBLE ON LORD) TO GET DESIRED COLOUR OF THE DEPARTMENT SELECT
 // job display orders //
-	
+
 /// Key value for taking the department's string and getting a color back
 #define JCOLOR_BY_DEPARTMENT list(\
 	"Noblemen" = JCOLOR_NOBLE,\
@@ -273,6 +279,12 @@
 #define JDO_WRETCH 11.2
 #define JDO_GNOLL 11.3
 #define JDO_HAG 11.4
+
+// TA ADDITION START
+// Thief Guild
+#define JDO_THIEFGUILDMASTER 11.5
+
+// TA ADDITION END
 
 #define BITFLAG_HOLY_WARRIOR (1<<0)
 #define BITFLAG_ROYALTY (1<<1)
