@@ -66,7 +66,7 @@
 	for(var/mob/living/L in GLOB.player_list)
 		if(L == user || istype(L, /mob/living/carbon/human/dummy) || !L.mind)
 			continue
-		var/is_hunted = L.has_flaw(/datum/charflaw/targeted) // TA EDIT - ORIGINAL: var/is_hunted = L.has_flaw(/datum/charflaw/hunted)
+		var/is_hunted = L.has_flaw(/datum/charflaw/hunted)
 		// Don't uncomment for now
 		// var/target_role = L.job
 		var/is_valid_prey = is_hunted
@@ -181,7 +181,7 @@
 
 	// Determine Channel Time
 	var/channel_time = 15 SECONDS
-	if(target.has_flaw(/datum/charflaw/targeted)) // TA EDIT - ORIGINAL: if(target.has_flaw(/datum/charflaw/hunted))
+	if(target.has_flaw(/datum/charflaw/hunted))
 		channel_time = 6 SECONDS
 
 	to_chat(user, span_notice("You begin pulling [target] into graggar's plane"))

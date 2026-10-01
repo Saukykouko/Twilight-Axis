@@ -56,7 +56,7 @@
 	min_pq = 20 // TA EDIT
 	antag_datum = /datum/antagonist/assassin
 	advclass_cat_rolls = list(CTAG_ASSASSIN = 20)
-	banned_flaws = list(/datum/charflaw/targeted) // TA EDIT - ORIGINAL: banned_flaws = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
+	banned_flaws = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
 	banned_virtues = list(/datum/virtue/utility/feytouched)
 
 /datum/migrant_role/gnoll
@@ -64,4 +64,4 @@
 	min_pq = 40 // TA EDIT
 	antag_datum = /datum/antagonist/gnoll
 	advclass_cat_rolls = list(CTAG_GNOLL = 20)
-	banned_flaws = list(/datum/charflaw/targeted) // TA EDIT - ORIGINAL: banned_flaws = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
+	banned_flaws = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
