@@ -195,39 +195,3 @@
 		TRAIT_BLOOD_RESISTANCE,
 		TRAIT_NOPAIN,
 	)
-
-/datum/charflaw/targeted
-	name = "Targeted (+2 TRI)"
-	desc = "Someone, somewhere, has offered up my name to the Bloodsworn of Graggar. You will be hunted by Gnolls and Assassin. \
-	Assassins will seek my skin-and-soul to steal-and-bind." + span_artery("\nHaving this vice will add you to a list of targets hunted by a powerful \
-	class. If they are successful in killing you, you may be round-removed for a time, though you will be recoverable if the assassin is slain and \
-	their dagger is broken.") + span_danger("\nAssassins DO-NOT NEED to ESCALATE against you if you have this vice. To reiterate: please expect \
-	random attacks and-or potential round removal, even if not permanent. You are still granted ERP protection.")
-
-/datum/charflaw/targeted/on_mob_creation(mob/user)
-	. = ..()
-	user.adjust_triumphs(2)
-
-/datum/job/roguetown/assassin
-	vice_restrictions = list(/datum/charflaw/targeted)
-
-/datum/job/roguetown/greater_skeleton
-	vice_restrictions = list(/datum/charflaw/targeted)
-
-/datum/job/roguetown/greater_skeleton/lich
-	vice_restrictions = list(/datum/charflaw/targeted, /datum/charflaw/wanted)
-
-/datum/job/roguetown/gnoll
-	vice_restrictions = list(/datum/charflaw/targeted)
-
-/datum/job/roguetown/hag
-	vice_restrictions = list(/datum/charflaw/targeted, /datum/charflaw/wanted) // could you fucking imagine
-
-/datum/job/roguetown/greater_skeleton/siege_skeleton
-	vice_restrictions = list(/datum/charflaw/targeted)
-
-/datum/migrant_role/assassin
-	banned_flaws = list(/datum/charflaw/targeted)
-
-/datum/migrant_role/gnoll
-	banned_flaws = list(/datum/charflaw/targeted)
