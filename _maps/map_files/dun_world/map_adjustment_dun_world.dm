@@ -8,14 +8,15 @@
 	map_file_name = "dun_world.dmm"
 	realm_name = "Twilight Axis"
 	blacklist = list(
-		/datum/job/roguetown/royal_guard, 
-		/datum/job/roguetown/sheriff, 
-		/datum/job/roguetown/town_watch, 
-		/datum/job/roguetown/vanguard, 
-		/datum/job/roguetown/courtphysician, 
-		/datum/job/roguetown/knight_enigma, 
-		/datum/job/roguetown/royal_sergeant, 
-		/datum/job/roguetown/overseer, 
+		/datum/job/roguetown/royal_guard,
+		/datum/job/roguetown/sheriff,
+		/datum/job/roguetown/thief_guild_master,
+		/datum/job/roguetown/town_watch,
+		/datum/job/roguetown/vanguard,
+		/datum/job/roguetown/courtphysician,
+		/datum/job/roguetown/knight_enigma,
+		/datum/job/roguetown/royal_sergeant,
+		/datum/job/roguetown/overseer,
 		/datum/job/roguetown/mayor,
 		/datum/job/roguetown/bailiff,
 		/datum/job/roguetown/cataphract,

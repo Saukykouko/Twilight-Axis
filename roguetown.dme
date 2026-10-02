@@ -4199,6 +4199,7 @@
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\Inquisition\inquisitor.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\Inquisition\orthodoxist.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\Inquisition\orthoclasses\psydonianwarscholar.dm"
+#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\karnfels_roles\nachtfuchs.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\nobility\consort.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\nobility\lord.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\nobility\prince.dm"
