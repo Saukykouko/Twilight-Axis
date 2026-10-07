@@ -1,6 +1,7 @@
 /datum/action/cooldown/spell/noc
 	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	associated_skill = /datum/skill/magic/holy
 
 /////////////////////////
 // T0 - Nitesight. //////
@@ -14,139 +15,65 @@
 	invocation_type = "Нок направляет мой взор."
 
 //////////////////////////////
-// T1 - Step in the shadow. //
+// T1 - Hiden Rune. //
 /////////////////////////////
 
-/datum/action/cooldown/spell/noc/TAstep_in_the_shadow
-	name = "Шаг во тьму"
-	desc = "Находясь в тени, вы можете быстро телепортироваться в неосвещённое место. Ограничено дальностью в 6 шагов."
-	sound = 'sound/magic/blink.ogg'
+/datum/action/cooldown/spell/noc/TAhidden_rune
+	name = "Скрытая Руна"
+	desc = "Вы создаете на полу скрытую руну. При наступлении на руну существом, что не являются членом вашей группы, создается морозное поле радиусом 3x3, которое охлаждает всех, кто в него войдёт."
+	sound = 'sound/spellbooks/crystal.ogg'
 	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "noc_gaze"
-	cooldown_time = 40 SECONDS
-	charge_required = TRUE
-	charge_time = 1 SECONDS
-	charge_slowdown = 0
-	charge_sound = null
-	hide_charge_effect = TRUE
-	invocation_type = INVOCATION_NONE
-	hold_drain = 1
-	spell_color = NONE
-	glow_intensity = NONE
-	ignore_armor_penalty = TRUE
-	attunement_school = null
-	source_aspect = null
-	weapon_cast_penalized = FALSE
-	primary_resource_type = SPELLCOST_MIRACLE_MAJOR
-	secondary_resource_type = SPELLCOST_TELEPORT
-	has_visual_effects = FALSE
-	spell_impact_intensity = SPELL_IMPACT_NONE
-	associated_stat = null
-	associated_skill = /datum/skill/magic/holy
-	spell_tier = 0
-	point_cost = 0
-	var/max_range = 6
-	var/phase = /obj/effect/temp_visual/blink/shadowstep
-
-/datum/action/cooldown/spell/noc/TAstep_in_the_shadow/cast(atom/cast_on)
-	. = ..()
-	var/turf/T = get_turf(cast_on)
-	var/turf/start = get_turf(owner)
-	if(T.get_lumcount() > 0.25 || start.get_lumcount() > 0.25)
-		to_chat(owner, span_warning("There is too much light!"))
-		return FALSE
-
-	var/dest_err = arcyne_validate_blink_dest(T, owner)
-	if(dest_err)
-		to_chat(owner, span_warning(dest_err))
-		return FALSE
-
-	var/distance = get_dist(start, T)
-	if(distance > max_range)
-		to_chat(owner, span_warning("That location is too far away! I can only blink up to [max_range] tiles."))
-		return FALSE
-
-	var/path_err = arcyne_validate_blink_path(start, T)
-	if(path_err)
-		to_chat(owner, span_warning(path_err))
-		return FALSE
-
-	owner.visible_message(span_warning("<b>[owner]'s body begins to shimmer with arcane energy as [owner.p_they()] prepare[owner.p_s()] to blink!</b>"),
-					span_notice("<b>I focus my arcane energy, preparing to blink across space!</b>"))
-
-	new phase(start, owner.dir)
-	new phase(T, owner.dir)
-
-	var/mob/living/L = owner
-	if(istype(L) && L.buckled)
-		L.buckled.unbuckle_mob(L, TRUE)
-
-	// Afterimage at departure point
-	var/obj/effect/after_image/img = new(start, 0, 0, 0, 0, 0.5 SECONDS, 2 SECONDS, 0)
-	img.name = owner.name
-	img.appearance = owner.appearance
-	img.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	img.alpha = 120
-	animate(img, alpha = 0, time = 1.5 SECONDS, easing = LINEAR_EASING)
-	QDEL_IN(img, 1.5 SECONDS)
-
-	do_teleport(owner, T, channel = TELEPORT_CHANNEL_MAGIC)
-
-	return TRUE
-
-/obj/effect/temp_visual/blink/shadowstep
-	icon_state = "curse"
-	light_color = COLOR_PALE_PURPLE_GRAY
-
-///////////////////////
-// T1 - Inspiration. //
-///////////////////////
-
-/datum/action/cooldown/spell/noc/TAinspiration
-	name = "Вдохновение"
-	desc = "Прикоснитесь к цели. Следующий сон цели будет вдохновлён, даруя больше очков сна цели и немного себе. \
-	Количество очков зависит от вашего уровня чудес."
-	button_icon_state = "moondream"
-	sound = 'sound/magic/owlhoot.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
 
 	click_to_activate = TRUE
 	cast_range = SPELL_RANGE_ADJACENT
 	self_cast_possible = FALSE
 
-	primary_resource_cost = SPELLCOST_MIRACLE
+	primary_resource_cost = 50
 
-	secondary_resource_cost = SPELLCOST_MIRACLE_MINOR
+	secondary_resource_cost = 10
 
-	invocation_type = INVOCATION_WHISPER
-	invocations = list("Спокойной ночи.")
+	invocation_type = INVOCATION_NONE
+	invocations = null
 
 	charge_required = FALSE
-	cooldown_time = 25 MINUTES
+	cooldown_time = 1 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-/datum/action/cooldown/spell/noc/TAinspiration/cast(atom/cast_on)
+/datum/action/cooldown/spell/noc/TAhidden_rune/cast(atom/cast_on)
 	. = ..()
-	if(isliving(cast_on))
-		var/mob/living/carbon/human/target = cast_on
-		var/mob/living/carbon/human/H = owner
-		if(target.anti_magic_check(TRUE, TRUE))
-			to_chat(owner, span_danger("Что-то мешает мне вдохновить их сны!"))
-			return FALSE
-		if(!target.mind)
-			to_chat(owner, span_warning("Цель слишком глупа для моих чудес!"))
-			return FALSE
-		if(target.mind?.sleep_adv)
-			owner.visible_message(span_blue("[owner] рисует светящийся голубой полумесяц на голове [target]"))
-			to_chat(target, span_blue("Мой разум сияет множественными изображениями и идеями! Мои сны будут более насыщенными...!"))
-			target.mind.sleep_adv.sleep_adv_points += H.get_skill_level(associated_skill)
-			target.energy_add(50 * H.get_skill_level(associated_skill))
-			H.energy_add(25 * H.get_skill_level(associated_skill))
-			H.mind.sleep_adv.sleep_adv_points += floor(H.get_skill_level(associated_skill)/2)
-		return TRUE
-	return FALSE
+	if(isopenturf(cast_on))
+		var/mob/living/carbon/human/O = owner
+		var/turf/place_to_spawn = cast_on
+		var/obj/structure/trap/moon/moon_trap = new /obj/structure/trap/moon(place_to_spawn)
+		moon_trap.summoner = O
+		var/datum/fellowship/F = O.current_fellowship
+		if(F)
+			for(var/mob/living/carbon/human/fellowshipers as anything in F.get_members())
+				moon_trap.immune_minds += fellowshipers.mind
+		else
+			moon_trap.immune_minds += O.mind
+
+/obj/structure/trap/moon
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "spellwarning"
+	layer = BELOW_MOB_LAYER
+	max_integrity = 100
+	charges = 1
+	trap_damage = 50
+	disarm_by_sight = FALSE
+	var/mob/living/summoner
+
+/obj/structure/trap/moon/trap_effect(mob/living/L)
+	. = ..()
+	new /obj/effect/frozen_mist/moon(L.loc, summoner)
+
+/obj/effect/frozen_mist/moon
+	effect_radius = 1
+	ticks_remaining = 5
 
 /////////////////////////
 // T2 - Nite Owl. //
@@ -419,7 +346,7 @@
 	var/list/magister_bundle = list(
 		/datum/action/cooldown/spell/projectile/arc_bolt,
 		/datum/action/cooldown/spell/projectile/spitfire,
-		/datum/action/cooldown/spell/projectile/arcyne_lance,
+		/datum/action/cooldown/spell/projectile/frost_bolt,
 	)
 	// Controller - debuffs
 	var/list/controller_bundle = list(
@@ -569,7 +496,6 @@
 
 /datum/action/cooldown/spell/undivided/undivided_spellpack
 	miracle_generalist_bundle = list(
-		/datum/action/cooldown/spell/noc/TAinspiration::name			= /datum/action/cooldown/spell/noc/TAinspiration,
 		/datum/action/cooldown/spell/darkvision/undivided::name		= /datum/action/cooldown/spell/darkvision/undivided,
 		/datum/action/cooldown/spell/noc/invisibility::name			= /datum/action/cooldown/spell/noc/invisibility,
 		/obj/effect/proc_holder/spell/targeted/blesscrop::name		= /obj/effect/proc_holder/spell/targeted/blesscrop,
@@ -587,6 +513,6 @@
 		/obj/effect/proc_holder/spell/invoked/abyssor_undertow::name		= /obj/effect/proc_holder/spell/invoked/abyssor_undertow,
 		/datum/action/cooldown/spell/ravox/withstand::name					= /datum/action/cooldown/spell/ravox/withstand,
 		/datum/action/cooldown/spell/mending/malum::name					= /datum/action/cooldown/spell/mending/malum,
-		/datum/action/cooldown/spell/noc/TAinspiration::name					= /datum/action/cooldown/spell/noc/TAinspiration,
+		/datum/action/cooldown/spell/noc/TAhidden_rune::name					= /datum/action/cooldown/spell/noc/TAhidden_rune,
 		/obj/effect/proc_holder/spell/invoked/vendetta::name				= /obj/effect/proc_holder/spell/invoked/vendetta,
 	)
