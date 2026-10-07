@@ -1423,8 +1423,6 @@
 		return TRUE
 	if(IsSleeping())
 		return TRUE
-	if(HAS_TRAIT(src, TRAIT_DUMB))
-		return TRUE
 
 /mob/living/carbon/can_speak_vocal()
 	. = ..()
