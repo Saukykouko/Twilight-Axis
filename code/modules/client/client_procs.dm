@@ -139,7 +139,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		var/msg = input(src, "Reply to the admin team:", "Adminhelp reply") as message|null
 		if(!msg)
 			return
-		current_ticket.MessageNoRecipient(msg, FALSE)
+		if(!current_ticket.SendPlayerMessage(msg)) // TA EDIT
+			return
 		return
 
 	if(href_list["playerlistrogue"])
@@ -1124,7 +1125,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 	if(lmb_skipclick(object, L))
 		return
 
-	if(mob && L["left"] && !L["right"] && mob.atkswinging == "left")
+	if(mob && L["left"] && !L["right"] && mob.atkswinging == "left" && !click_intercept && !mob.click_intercept && !LAZYACCESS(mob.comp_lookup, COMSIG_MOB_CLICKON))
 		var/obj/item/held_item = mob.get_active_held_item()
 		if(mob.lmb_farclick(click_object, held_item, L, get_turf(mob)))
 			mob.atkswinging = null
