@@ -8,9 +8,8 @@
 		STATKEY_PER = 2,
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 3,
-		STATKEY_CON = 2,
-		STATKEY_INT = 2,
-		STATKEY_STR = 1
+		STATKEY_CON = 1,
+		STATKEY_INT = 2
 	)
 	subclass_skills = list(
 		/datum/skill/magic/holy = SKILL_LEVEL_MASTER,
