@@ -25,7 +25,6 @@
 	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "noc_gaze"
-	glow_intensity = GLOW_INTENSITY_LOW
 
 	click_to_activate = TRUE
 	cast_range = SPELL_RANGE_ADJACENT
@@ -56,6 +55,8 @@
 				moon_trap.immune_minds += fellowshipers.mind
 		else
 			moon_trap.immune_minds += O.mind
+	else
+		return FALSE
 
 /obj/structure/trap/moon
 	icon = 'icons/effects/effects.dmi'
