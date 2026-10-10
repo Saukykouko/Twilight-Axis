@@ -99,8 +99,8 @@
 		"Лунной Девой", "Лунной Деве",
 		"Знающая", "Знающей", "Знающей", "Знающую", "Знающей", "Знающей"
 	)
-
-	traits_tier = list(TRAIT_DARKVISION = CLERIC_T1, TRAIT_INTELLECTUAL = CLERIC_T1)
+	mob_traits = list(TRAIT_NIGHT_OWL, TRAIT_INTELLECTUAL)
+	traits_tier = list(TRAIT_DARKVISION = CLERIC_T1, TRAIT_BETTER_SLEEP = CLERIC_T1)
 
 	domain = "Луна, знания, сумерки, аркана, контроль, сны."
 	desc = "Богиня знаний, ночи, Луны, и тайн. Первая владыка Арканы. Нок сестра-близнец перворожденной Астраты. Увидав впервые Луну, она нарекла её своим владением, и каждый раз возносит ее в небеса над Гриморией, чтобы осветить темную ночь для тех кто следует ей."
@@ -108,9 +108,9 @@
 	miracles = list(/datum/action/cooldown/spell/touch/orison				= CLERIC_ORI,
 					/datum/action/cooldown/spell/noc/nitevision				= CLERIC_T0,
 					/datum/action/cooldown/spell/noc/TAhidden_rune			= CLERIC_T1,
+					/datum/action/cooldown/spell/projectile/nite_owl		= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
-					/datum/action/cooldown/spell/projectile/nite_owl		= CLERIC_T1,
 					/datum/action/cooldown/spell/noc/TAblindness			= CLERIC_T2,
 					/datum/action/cooldown/spell/noc/invisibility			= CLERIC_T2,
 					/datum/action/cooldown/spell/noc/TAspellpack			= CLERIC_T3,
