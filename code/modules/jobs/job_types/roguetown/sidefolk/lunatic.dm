@@ -66,3 +66,5 @@
 	belt	= /obj/item/storage/belt/rogue/leather/rope
 	beltl = /obj/item/rogueweapon/huntingknife/stoneknife
 	beltr = /obj/item/flashlight/flare/torch
+	if(alert(H, "Ты хочешь отречься от ВСЕХ богов, став истинным отребьем современного общества?", "Безбожник", "Да", "Нет") == "Да")
+		H.set_patron(/datum/patron/godless)
