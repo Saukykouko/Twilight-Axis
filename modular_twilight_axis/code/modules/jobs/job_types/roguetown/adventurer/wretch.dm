@@ -130,7 +130,6 @@
 			wretch_select_bounty(H)
 			H.change_stat(STATKEY_WIL, 2)
 			H.change_stat(STATKEY_CON, 1)
-			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 
 /proc/bountychoice_maestro(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
