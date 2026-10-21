@@ -196,4 +196,4 @@
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 
-	wretch_select_bounty(H)
+	bountychoice_pariah(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
