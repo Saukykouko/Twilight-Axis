@@ -206,8 +206,8 @@
 		if("They fear me")
 			wretch_select_bounty(H)
 			H.change_stat(STATKEY_PER, 1)
-			H.change_stat(STATKEY_WIL, 1)
-			H.change_stat(STATKEY_STR, 1)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 1)
 
 /proc/bountychoice_plaguebearer(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
