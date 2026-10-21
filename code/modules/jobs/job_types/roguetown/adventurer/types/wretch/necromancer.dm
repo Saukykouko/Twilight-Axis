@@ -57,18 +57,6 @@
 	if(H.mind)
 		backr = choose_implement(H, "greater")
 		H.set_patron(/datum/patron/inhumen/zizo)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/eyebite)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/bonechill)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/bonemend)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/gravemark)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/raise_undead_formation/necromancer)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/raise_undead_guard/necromancer)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/convert_heretic)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/lacrima)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/tame_undead)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/raise_deadite)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular/zizo) //Sure I guess
 		bountychoice_necromancer(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 	H.grant_language(/datum/language/undead)
 
