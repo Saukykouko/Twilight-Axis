@@ -141,8 +141,8 @@
 				beltl	= /obj/item/rogueweapon/scabbard/sword
 				// TA ADDITION START
 				if(crimeschoice == "They fear me")
-					H.inspiration.bonus_rhythm_picks = 1 // 3 rhythm picks instead of T2 default 2
-					H.inspiration.maxsongs++				// 5 song slots instead of T2 default 4
+					H.inspiration.bonus_rhythm_picks = 1 // 4 rhythm picks instead of T2 default 2
+					H.inspiration.maxsongs++				// 6 song slots instead of T2 default 4
 				// TA ADDITION END
 			if("Boomwhacker")
 				ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)

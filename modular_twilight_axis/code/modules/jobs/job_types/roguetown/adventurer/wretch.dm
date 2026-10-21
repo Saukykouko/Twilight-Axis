@@ -131,19 +131,6 @@
 			H.change_stat(STATKEY_WIL, 2)
 			H.change_stat(STATKEY_CON, 1)
 
-/proc/bountychoice_maestro(mob/living/carbon/human/H)
-	var/crimes = list("I'm nobody", "They fear me")
-	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
-	switch(crimeschoice)
-		if("I'm nobody")
-			return
-		if("They fear me")
-			wretch_select_bounty(H)
-			H.change_stat(STATKEY_WIL, 1)
-			H.change_stat(STATKEY_PER, 1)
-			H.change_stat(STATKEY_INT, 1)
-			H.change_stat(STATKEY_CON, 1)
-
 /proc/bountychoice_slasher(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
 	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
