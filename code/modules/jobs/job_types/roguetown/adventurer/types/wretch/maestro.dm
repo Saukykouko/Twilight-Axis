@@ -92,11 +92,18 @@
 			if("Drums")
 				backr = /obj/item/rogue/instrument/drum
 
+		var/crimes = list("I'm nobody", "They fear me")
+		var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+
 		// TA ADDITION START
 		if(crimeschoice == "I'm nobody")
-			continue
+			to_chat(H, span_warning("К сожалению, своей музыкой я не сыскал славы... Даже в преступном мире."))
 		else if(crimeschoice == "They fear me")
-			bountychoice_maestro(H)
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_CON, 1)
 		// TA ADDITION END
 
 		var/paths = list("Busker", "Cacophonist", "Boomwhacker", "Chanter", "Cipher")
@@ -164,7 +171,8 @@
 				grant_poke_spell(H)
 				if(crimeschoice == "They fear me")
 					H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_EXPERT, TRUE)
-					H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 0))
+					H.mind.mage_aspect_config["minor"] += 1
+					H.mind.check_learnspell()
 				// TA ADDITION END
 
 		// TA REMOVAL - ORIGINAL: wretch_select_bounty(H)

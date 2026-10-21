@@ -261,6 +261,8 @@
 			H.change_stat(STATKEY_WIL, 1)
 			H.change_stat(STATKEY_PER, 1)
 			H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 2))
+			H.mind.mage_aspect_config["minor"] += 1
+			H.mind.mage_aspect_config["utility"] += 1
 
 /proc/bountychoice_berserker(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
