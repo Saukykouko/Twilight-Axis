@@ -262,6 +262,7 @@
 			H.change_stat(STATKEY_PER, 1)
 			H.mind.mage_aspect_config["minor"] += 1
 			H.mind.mage_aspect_config["utility"] += 3
+			H.mind.check_learnspell()
 
 /proc/bountychoice_berserker(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
