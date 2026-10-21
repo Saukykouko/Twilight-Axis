@@ -21,6 +21,7 @@
 	var/hag_tier = 1
 	var/static/list/curse_registry = list(
 		/datum/hag_boon/curse/rotting_touch = list("cost" = 1, "min_tier" = 1),
+		/datum/hag_boon/trait/curse/vegan = list("cost" = 15, "min_tier" = 1), // TA ADDITION
 		/datum/hag_boon/buff/curse/choking_moss = list("cost" = 40, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/waterlogged = list("cost" = 25, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/slumber = list("cost" = 20, "min_tier" = 1),
@@ -29,6 +30,11 @@
 		/datum/hag_boon/trait/curse/silver_weakness = list("cost" = 50, "min_tier" = 1),
 		// Trait Curses - Tier 2 (51 - 75 points)
 		/datum/hag_boon/trait/curse/no_run = list("cost" = 60, "min_tier" = 2),
+		// TA ADDITION START
+		/datum/hag_boon/trait/curse/light_sensivity = list("cost" = 65, "min_tier" = 2),
+		/datum/hag_boon/buff/curse/right_eye = list("cost" = 65, "min_tier" = 2),
+		/datum/hag_boon/buff/curse/left_eye = list("cost" = 65, "min_tier" = 2),
+		// TA ADDITION END
 		/datum/hag_boon/trait/curse/critical_weakness = list("cost" = 75, "min_tier" = 2),
 		// Trait Curses - Tier 3 (76+ points)
 		/datum/hag_boon/trait/curse/no_spells = list("cost" = 100, "min_tier" = 3),
