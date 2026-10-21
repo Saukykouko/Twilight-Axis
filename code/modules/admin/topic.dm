@@ -22,6 +22,16 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
+	if(href_list["ta_patron_followers"]) // TA EDIT
+		if(check_rights(R_ADMIN)) // TA EDIT
+			ta_show_patron_followers() // TA EDIT
+		return // TA EDIT
+
+	if(href_list["ta_patron_narrate"]) // TA EDIT
+		if(check_rights(R_ADMIN)) // TA EDIT
+			ta_narrate_patron_followers(href_list["ta_patron_narrate"]) // TA EDIT
+		return // TA EDIT
+
 	if(href_list["read_letter"])
 		var/index = text2num(href_list["read_letter"])
 		if(index >= 1 && index <= length(SSroguemachine.letter_archive))
@@ -1044,6 +1054,40 @@
 				log_admin("[key_name(usr)] added the limit to [job.title] slots.")
 				message_admins("[key_name(usr)] added the limit to [job.title] slots.")
 				break
+
+		src.manage_free_slots()
+
+	else if(href_list["setsubclassslot"])
+		if(!check_rights(R_ADMIN))
+			return
+
+		var/datum/advclass/subclass = locate(href_list["setsubclassslot"])
+		if(!istype(subclass))
+			return
+
+		var/new_max = input(usr, "Maximum slots for [subclass.name] ([subclass.total_slots_occupied] currently filled). -1 for unlimited.", "Set subclass slots", subclass.maximum_possible_slots) as num|null
+		if(isnull(new_max))
+			return
+		new_max = round(new_max)
+		if(new_max < -1)
+			new_max = -1
+		log_admin("[key_name(usr)] set the slots for subclass [subclass.name] from [subclass.maximum_possible_slots] to [new_max].")
+		message_admins("[key_name_admin(usr)] set the slots for subclass [subclass.name] from [subclass.maximum_possible_slots] to [new_max].")
+		subclass.maximum_possible_slots = new_max
+
+		src.manage_free_slots()
+
+	else if(href_list["unlimitsubclassslot"])
+		if(!check_rights(R_ADMIN))
+			return
+
+		var/datum/advclass/subclass = locate(href_list["unlimitsubclassslot"])
+		if(!istype(subclass))
+			return
+
+		log_admin("[key_name(usr)] made subclass [subclass.name] unlimited.")
+		message_admins("[key_name_admin(usr)] made subclass [subclass.name] unlimited.")
+		subclass.maximum_possible_slots = -1
 
 		src.manage_free_slots()
 

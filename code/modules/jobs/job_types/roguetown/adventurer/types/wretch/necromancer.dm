@@ -16,12 +16,12 @@
 		STATKEY_WIL = 1
 	)
 	age_mod = /datum/class_age_mod/wretch/rogue_mage
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 4, "post_aspect_spells" = list(/datum/action/cooldown/spell/message, /datum/action/cooldown/spell/mindlink), "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 3, "utilities" = 4, "locked_aspects" = list(/datum/magic_aspect/lesser_necromancy), "unlocked_aspects" = list(/datum/magic_aspect/necromancy), "post_aspect_spells" = list(/datum/action/cooldown/spell/message, /datum/action/cooldown/spell/mindlink, /obj/effect/proc_holder/spell/invoked/diagnose/secular/zizo), "ward" = TRUE)
 	//VS rogue mage, weaker combat skills + less alchemy (works with the living less often) to make up for their minions doing the work for them.
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/arcyne = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
@@ -70,6 +70,7 @@
 		H.mind.AddSpell(new /datum/action/cooldown/spell/raise_deadite)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular/zizo) //Sure I guess
 		bountychoice_necromancer(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
+		wretch_select_bounty(H)
 	H.grant_language(/datum/language/undead)
 
 	// Armor choice: Discretion (lighter robes, subtle similar to rogue mage) vs Progress (open armored necromancer robes) with better protection potental and unique drip
