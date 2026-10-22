@@ -32,8 +32,6 @@
 		/datum/hag_boon/trait/curse/no_run = list("cost" = 60, "min_tier" = 2),
 		// TA ADDITION START
 		/datum/hag_boon/trait/curse/light_sensivity = list("cost" = 65, "min_tier" = 2),
-		/datum/hag_boon/buff/curse/right_eye = list("cost" = 65, "min_tier" = 2),
-		/datum/hag_boon/buff/curse/left_eye = list("cost" = 65, "min_tier" = 2),
 		// TA ADDITION END
 		/datum/hag_boon/trait/curse/critical_weakness = list("cost" = 75, "min_tier" = 2),
 		// Trait Curses - Tier 3 (76+ points)

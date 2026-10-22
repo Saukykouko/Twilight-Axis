@@ -139,8 +139,6 @@
 		// TA ADDITION START
 		/datum/hag_boon/spell/rat_form,
 		/datum/hag_boon/spell/blesscrop,
-		/datum/hag_boon/buff/curse/left_eye,
-		/datum/hag_boon/buff/curse/right_eye,
 		/datum/hag_boon/trait/curse/vegan,
 		/datum/hag_boon/trait/curse/light_sensivity,
 		/datum/hag_boon/trait/parry_expert,
@@ -148,10 +146,9 @@
 		/datum/hag_boon/trait/eoran_serene,
 		/datum/hag_boon/trait/light_step,
 		/datum/hag_boon/trait/noble,
-		/datum/hag_boon/buff/skeleton,
-		/datum/hag_boon/rejuvenate,
+		/datum/hag_boon/buff/rejuvenate,
 		/datum/hag_boon/buff/arcyne_affinity,
-		/datum/hag_boon/buff/devotee,
+		/datum/hag_boon/buff/devotee
 		// TA ADDITION END
 	)
 

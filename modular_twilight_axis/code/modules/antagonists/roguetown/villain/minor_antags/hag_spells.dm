@@ -29,6 +29,7 @@
 	skin_armor = null
 	wildshape_icon = 'icons/roguetown/mob/monster/rat.dmi'
 	wildshape_icon_state = "srat"
+	give_miracles = FALSE
 
 /mob/living/carbon/human/species/wildshape/rat/gain_inherent_skills()
 	. = ..()
@@ -103,28 +104,6 @@
 	points = 50
 
 // Curses
-/datum/hag_boon/buff/curse/left_eye
-	name = "Trait - Scared Left Eye"
-	desc = "The bearer's left eye losts it's ability to see."
-	points = 65
-
-/datum/hag_boon/buff/curse/left_eye/apply_boon_effect(mob/living/L)
-	var/mob/living/carbon/human/H = L
-	var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
-	head?.add_wound(/datum/wound/facial/eyes/left/permanent)
-	H.update_fov_angles()
-
-/datum/hag_boon/buff/curse/right_eye
-	name = "Trait - Scared Right Eye"
-	desc = "The bearer's right eye losts it's ability to see."
-	points = 65
-
-/datum/hag_boon/buff/curse/right_eye/apply_boon_effect(mob/living/L)
-	var/mob/living/carbon/human/H = L
-	var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
-	head?.add_wound(/datum/wound/facial/eyes/right/permanent)
-	H.update_fov_angles()
-
 /datum/hag_boon/trait/curse/vegan
 	name = "Trait - Vegan"
 	trait_to_apply = TRAIT_VEGAN
@@ -174,9 +153,14 @@
 	name = "Devotee"
 	desc = "Bearer gain the lesserest miracles of their god, but if they already has it, their devotee regeneration will be increased..."
 	points = 50
+	status_type = /datum/status_effect/buff/hag_boon/devotee
 
-/datum/hag_boon/buff/devotee/apply_boon_effect(mob/living/L)
-	var/mob/living/carbon/human/H = L
+/datum/status_effect/buff/hag_boon/devotee
+	id = "Devotee"
+	duration = 1 SECONDS
+
+/datum/status_effect/buff/hag_boon/devotee/on_apply()
+	var/mob/living/carbon/human/H = owner
 	H.adjust_skillrank_up_to(/datum/skill/magic/holy, 4, TRUE)
 	if(!H.devotion)
 		var/datum/devotion/new_faith = new /datum/devotion(H, H.patron)
@@ -191,9 +175,14 @@
 	name = "Arcyne Affinity"
 	desc = "Bearer gain the arcyne potencial and learn some spells!"
 	points = 65
+	status_type = /datum/status_effect/buff/hag_boon/arcyne_affinity
 
-/datum/hag_boon/buff/arcyne_affinity/apply_boon_effect(mob/living/L)
-	var/mob/living/carbon/human/H = L
+/datum/status_effect/buff/hag_boon/arcyne_affinity
+	id = "Arcyne Affinity"
+	duration = 1 SECONDS
+
+/datum/status_effect/buff/hag_boon/arcyne_affinity/on_apply()
+	var/mob/living/carbon/human/H = owner
 	if (!H.get_skill_level(/datum/skill/magic/arcane))
 		if (!H.mind?.has_spell(/datum/action/cooldown/spell/touch/prestidigitation))
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/touch/prestidigitation)
@@ -208,14 +197,6 @@
 	H.adjust_skillrank_up_to(/datum/skill/magic/arcane, 4, TRUE)
 	return
 
-/datum/hag_boon/buff/arcyne_affinity/proc/add_arcyne_potential_utilities(mob/living/carbon/human/H, amount)
-	if(!H.mind)
-		return
-	if(!LAZYLEN(H.mind.mage_aspect_config))
-		H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3), grant_attunement = FALSE)
-	H.mind.mage_aspect_config["utilities"] += amount
-	H.mind.check_learnspell()
-
 /datum/hag_boon/buff/skeleton
 	name = "Skeleton Form"
 	desc = "Bearer becomes a Skeleton, nothing else."
@@ -227,15 +208,20 @@
 	H.select_skeleton_features()
 	return
 
-/datum/hag_boon/rejuvenate
-	name = "Wyrd Rejuvenation"
+/datum/hag_boon/buff/rejuvenate
+	name = "Wyrd's Rejuvenation"
 	desc = "Cures all long-term physical ailments, including: blindness, ugliness, missing limbs, and leprosy. Does not heal immediate wounds such as fractures and bleeds, and will not fix divine curses such as lux-taint, silver-weakness, vampirisim, or lycanthropy."
 	points = 50
+	status_type = /datum/status_effect/buff/hag_boon/wyrd_rejuv
 
-/datum/hag_boon/rejuvenate/apply_boon_effect(mob/living/L)
-	if(!ishuman(L))
+/datum/status_effect/buff/hag_boon/wyrd_rejuv
+	id = "wyrd_rejuv"
+	duration = 1 SECONDS
+
+/datum/status_effect/buff/hag_boon/wyrd_rejuv/on_apply()
+	if(!ishuman(owner))
 		return
-	var/mob/living/carbon/human/H = L
+	var/mob/living/carbon/human/H = owner
 	H.visible_message(span_warning("[H] stands, wreathed in a strange energy as [H.p_their()] body restores itself!"), span_green("I feel the burdens of the flesh lift from me!"))
 	H.SetUnconscious(0) // this is all copied from the surge spell. it's just for aura, and shouldn't have any real effect
 	H.SetSleeping(0)
@@ -360,7 +346,7 @@
 // Moss
 /obj/item/alch/hag_moss/enchanted/vibrant
 	name = "Vibrant Moss"
-	boon_path = /datum/hag_boon/rejuvenate
+	boon_path = /datum/hag_boon/buff/rejuvenate
 	desc = "This moss is overly-bright, overflowing with energy."
 	color = "#00ff00" // oversaturated on purpose
 
