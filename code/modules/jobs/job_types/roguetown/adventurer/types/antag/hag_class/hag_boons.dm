@@ -142,13 +142,16 @@
 		/datum/hag_boon/trait/curse/vegan,
 		/datum/hag_boon/trait/curse/light_sensivity,
 		/datum/hag_boon/trait/parry_expert,
+		/datum/hag_boon/trait/death_sight,
+		/datum/hag_boon/trait/no_hunger,
 		/datum/hag_boon/trait/poison_immune,
 		/datum/hag_boon/trait/eoran_serene,
 		/datum/hag_boon/trait/light_step,
 		/datum/hag_boon/trait/noble,
 		/datum/hag_boon/buff/rejuvenate,
 		/datum/hag_boon/buff/arcyne_affinity,
-		/datum/hag_boon/buff/devotee
+		/datum/hag_boon/buff/devotee,
+		/datum/hag_boon/buff/bard_initiate,
 		// TA ADDITION END
 	)
 

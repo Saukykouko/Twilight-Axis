@@ -21,7 +21,10 @@
 	var/hag_tier = 1
 	var/static/list/curse_registry = list(
 		/datum/hag_boon/curse/rotting_touch = list("cost" = 1, "min_tier" = 1),
-		/datum/hag_boon/trait/curse/vegan = list("cost" = 15, "min_tier" = 1), // TA ADDITION
+		// TA ADDITION START
+		/datum/hag_boon/trait/curse/awful_voice = list("cost" = 5, "min_tier" = 1),
+		/datum/hag_boon/trait/curse/vegan = list("cost" = 15, "min_tier" = 1),
+		// TA ADDITION END
 		/datum/hag_boon/buff/curse/choking_moss = list("cost" = 40, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/waterlogged = list("cost" = 25, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/slumber = list("cost" = 20, "min_tier" = 1),
@@ -37,7 +40,8 @@
 		// Trait Curses - Tier 3 (76+ points)
 		/datum/hag_boon/trait/curse/no_spells = list("cost" = 100, "min_tier" = 3),
 		/datum/hag_boon/trait/curse/mute = list("cost" = 100, "min_tier" = 3),
-		/datum/hag_boon/trait/curse/no_defense = list("cost" = 100, "min_tier" = 3)
+		/datum/hag_boon/trait/curse/no_defense = list("cost" = 100, "min_tier" = 3),
+		/datum/hag_boon/trait/curse/pacifist = list("cost" = 100, "min_tier" = 3) // TA ADDITION
 	)
 	/// List of boon paths the hag has pre-prepared: [boon_path] = quantity
 	var/list/prepared_boons = list()

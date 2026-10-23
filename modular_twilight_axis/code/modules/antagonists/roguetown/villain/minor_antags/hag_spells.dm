@@ -1,7 +1,7 @@
 // Spells
 /datum/hag_boon/spell/rat_form
 	name = "Boon of rat form"
-	desc = "Allows bearer to transform into a small rat...?"
+	desc = "Allows bearer to transform into a small, smart rat..."
 	spell_type = /obj/effect/proc_holder/spell/self/wildshape/hag_rat_form
 	points = 30
 
@@ -40,7 +40,7 @@
 		adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_MASTER, TRUE)
 
 		STASTR = 1
-		STACON = 1 // YOU GONNA DIE!
+		STACON = 1 // YOU GONNA DIE FROM ONE HIT, HA-HA-HA!!!
 		STAWIL = 15
 		STAPER = 14
 		STASPD = 15
@@ -97,6 +97,54 @@
 	human.update_damage_overlays()
 	return TRUE
 
+/datum/hag_boon/spell/roots_movement
+	name = "Boon of roots moving"
+	desc = "Allows bearer to move throught the roots to someone they know."
+	spell_type = /obj/effect/proc_holder/spell/self/roots_movement
+	points = 50
+
+/obj/effect/proc_holder/spell/self/roots_movement
+	name = "Movement of roots"
+	desc = "Move through the roots to someone you know..."
+	invocation_type = INVOCATION_SHOUT
+	recharge_time = 10 MINUTES
+	miracle = FALSE
+	devotion_cost = 0
+	clothes_req = FALSE
+	human_req = FALSE
+
+/obj/effect/proc_holder/spell/self/roots_movement/cast(list/targets, mob/user)
+	var/mob/living/carbon/human/C = user
+	var/list/possible = C.mind.known_people.Copy()
+	if(!possible.len)
+		to_chat(C, span_warning("I have no known livings."))
+		revert_cast()
+		return FALSE
+
+	var/prompt = "Choose living being to move to..."
+	var/target_name = tgui_input_list(C, prompt, "Roots Moving", sort_list(possible))
+
+	var/mob/living/carbon/human/found_mob
+	for(var/mob/living/carbon/human/HL in GLOB.human_list)
+		if(HL.real_name == target_name)
+			found_mob = HL
+			break
+
+	if(!found_mob)
+		revert_cast()
+		return FALSE
+
+	C.visible_message(span_yellow("[C]'s legs begin to cover in strange roots..."), \
+							span_yellow("I starts to move to [found_mob.name]..."))
+	if(!do_after(C, 10 SECONDS, TRUE, src))
+		revert_cast()
+		return FALSE
+
+	C.adjust_blindness(2)
+	C.forceMove(found_mob.loc)
+	C.visible_message(span_yellow("[C]'s appears from the ground, covered in roots!"), \
+							span_yellow("I moved throught the roots to [found_mob.name]."))
+
 /datum/hag_boon/spell/blesscrop
 	name = "Boon of bless crop"
 	desc = "Allows bearer to bless crops as druid does."
@@ -116,7 +164,42 @@
 	desc = "The bearer eyes becomes really sensitive to light!"
 	points = 65
 
+/datum/hag_boon/trait/curse/pacifist
+	name = "Trait - Pacifist"
+	trait_to_apply = TRAIT_PACIFISM
+	desc = "The bearer becomes a real pacifist."
+	points = 65
+
+/datum/hag_boon/trait/curse/awful_voice
+	name = "Trait - Awful Voice"
+	trait_to_apply = TRAIT_COMICSANS
+	desc = "The bearer's voice becomes really awful!"
+	points = 5
+
+/datum/hag_boon/trait/curse/awful_voice/apply_boon_effect(mob/living/L)
+	RegisterSignal(L, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	..()
+
+/datum/hag_boon/trait/curse/awful_voice/remove_boon_effect(mob/living/L)
+	UnregisterSignal(L, COMSIG_MOB_SAY)
+	..()
+
+/datum/hag_boon/trait/curse/awful_voice/proc/handle_speech(datum/source, list/speech_args)
+	speech_args[SPEECH_SPANS] |= SPAN_SANS
+
 // Traits
+/datum/hag_boon/trait/no_hunger
+	name = "Trait - Foodless"
+	trait_to_apply = TRAIT_NOHUNGER
+	desc = "The bearer can survive and live without food and water."
+	points = 20
+
+/datum/hag_boon/trait/death_sight
+	name = "Trait - Death Sight"
+	trait_to_apply = TRAIT_DEATHSIGHT
+	desc = "The bearer can feel if someone died near him..."
+	points = 20
+
 /datum/hag_boon/trait/parry_expert
 	name = "Trait - Parry Expert"
 	trait_to_apply = TRAIT_PARRYEXPERT
@@ -145,14 +228,62 @@
 	name = "Trait - Noble"
 	trait_to_apply = TRAIT_NOBLE
 	desc = "Bearer becomes noble!"
-	points = 65
+	points = 50
+
+/datum/hag_boon/trait/noble/apply_boon_effect(mob/living/L)
+	ADD_TRAIT(L, TRAIT_NOBLE_UNLANDED, TRAIT_HAG_BOON)
+	..()
 
 // Other
+/datum/hag_boon/buff/bard_initiate
+	name = "Bard Initiate"
+	desc = "The bearer becomes a bard, and also gets a musical instrument!"
+	points = 50
+	status_type = /datum/status_effect/buff/hag_boon/bard_initiate
+
+/datum/status_effect/buff/hag_boon/bard_initiate
+	id = "bard_initiate"
+	duration = 1 SECONDS
+
+/datum/status_effect/buff/hag_boon/bard_initiate/on_apply()
+	var/mob/living/carbon/human/H = owner
+	H.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_EXPERT, TRUE)
+	var/datum/inspiration/I = new /datum/inspiration(H)
+	I.grant_inspiration(H, bard_tier = BARD_T2)
+	if(H.mind)
+		var/instruments = list("Harp","Lute","Accordion","Guitar","Hurdy-Gurdy","Viola","Vocal Talisman", "Psyaltery", "Flute", "Drum", "Shamisen")
+		var/instrument_choice = tgui_input_list(H, "Choose your instrument.", "TAKE UP ARMS", instruments)
+		var/obj/item/rogue/instrument/instrument
+		switch(instrument_choice)
+			if("Harp")
+				instrument = /obj/item/rogue/instrument/harp
+			if("Lute")
+				instrument = /obj/item/rogue/instrument/lute
+			if("Accordion")
+				instrument = /obj/item/rogue/instrument/accord
+			if("Guitar")
+				instrument = /obj/item/rogue/instrument/guitar
+			if("Hurdy-Gurdy")
+				instrument = /obj/item/rogue/instrument/hurdygurdy
+			if("Viola")
+				instrument = /obj/item/rogue/instrument/viola
+			if("Vocal Talisman")
+				instrument = /obj/item/rogue/instrument/vocals
+			if("Psyaltery")
+				instrument = /obj/item/rogue/instrument/psyaltery
+			if("Flute")
+				instrument = /obj/item/rogue/instrument/flute
+			if("Drum")
+				instrument = /obj/item/rogue/instrument/drum
+			if("Shamisen")
+				instrument = /obj/item/rogue/instrument/shamisen
+
+		new instrument(H.loc)
 
 /datum/hag_boon/buff/devotee
 	name = "Devotee"
-	desc = "Bearer gain the lesserest miracles of their god, but if they already has it, their devotee regeneration will be increased..."
-	points = 50
+	desc = "Bearer gain the lesserest miracles of their god, but if they already has it, their devotee regeneration will be increased."
+	points = 40
 	status_type = /datum/status_effect/buff/hag_boon/devotee
 
 /datum/status_effect/buff/hag_boon/devotee
@@ -200,7 +331,7 @@
 /datum/hag_boon/buff/skeleton
 	name = "Skeleton Form"
 	desc = "Bearer becomes a Skeleton, nothing else."
-	points = 100
+	points = 85
 
 /datum/hag_boon/buff/skeleton/apply_boon_effect(mob/living/L)
 	var/mob/living/carbon/human/H = L
@@ -337,10 +468,16 @@
 	reqs = list(/obj/item/alch/hag_moss/mercy = 1, /obj/item/alch/mentha = 1, /obj/item/alch/rosa = 1)
 	craftdiff = 6
 
-/datum/crafting_recipe/roguetown/alchemy/hag/night_moss
-	name = "moss nighty"
-	result = list(/obj/item/alch/hag_moss/enchanted/magical = 1)
+/datum/crafting_recipe/roguetown/alchemy/hag/secret_moss
+	name = "moss secret"
+	result = list(/obj/item/alch/hag_moss/enchanted/secret = 1)
 	reqs = list(/obj/item/alch/hag_moss/lullaby = 1, /obj/item/alch/manabloompowder = 1)
+	craftdiff = 6
+
+/datum/crafting_recipe/roguetown/alchemy/hag/moving_moss
+	name = "moss moving"
+	result = list(/obj/item/alch/hag_moss/enchanted/moving = 1)
+	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/swampdust = 1)
 	craftdiff = 6
 
 // Moss
@@ -368,17 +505,28 @@
 	desc = "This moss is brown, touching it feels so fruitful!"
 	color = "#9e7b43"
 
-/obj/item/alch/hag_moss/enchanted/magical
-	name = "Night Moss"
+/obj/item/alch/hag_moss/enchanted/secret
+	name = "Secret Moss"
 	boon_path = /datum/hag_boon/buff/arcyne_affinity
-	desc = "This moss is strange, touching it makes you feel closer to arcyne and the devotee..."
+	desc = "This moss is strange, touching it makes you feel closer to arcyne, music and devotee..."
 	color = "#43589e"
 
-/obj/item/alch/hag_moss/enchanted/magical/Initialize(mapload)
+/obj/item/alch/hag_moss/enchanted/secret/Initialize(mapload)
 	. = ..()
-	if(prob(50))
-		boon_path = /datum/hag_boon/buff/devotee
-		name = "Devotee Moss"
-	else
-		boon_path = /datum/hag_boon/buff/arcyne_affinity
-		name = "Arcyne Moss"
+	var/probability = rand(1, 3)
+	switch(probability)
+		if(1)
+			boon_path = /datum/hag_boon/buff/devotee
+			name = "Devotee Moss"
+		if(2)
+			boon_path = /datum/hag_boon/buff/arcyne_affinity
+			name = "Arcyne Moss"
+		if(3)
+			boon_path = /datum/hag_boon/buff/bard_initiate
+			name = "Musical Moss"
+
+/obj/item/alch/hag_moss/enchanted/moving
+	name = "Moving Moss"
+	boon_path = /datum/hag_boon/spell/roots_movement
+	desc = "This moss is dextrous, but hard, and you feel it's moving..."
+	color = "#4e9479"

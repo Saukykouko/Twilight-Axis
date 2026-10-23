@@ -17,7 +17,7 @@
 		/obj/item/alch/hag_moss/enchanted/creeping	= 2,
 		// TA ADDITION START
 		/obj/item/alch/hag_moss/enchanted/vibrant	= 2,
-		/obj/item/alch/hag_moss/enchanted/magical		= 2,
+		/obj/item/alch/hag_moss/enchanted/secret		= 2,
 		// High Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/high = 1,
 		/obj/item/alch/hag_moss/enchanted/gilded		= 1,
