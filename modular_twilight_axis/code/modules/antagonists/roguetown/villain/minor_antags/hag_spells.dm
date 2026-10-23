@@ -170,21 +170,18 @@
 	desc = "The bearer becomes a real pacifist."
 	points = 65
 
-/datum/hag_boon/trait/curse/awful_voice
+/datum/hag_boon/curse/awful_voice
 	name = "Trait - Awful Voice"
-	trait_to_apply = TRAIT_COMICSANS
 	desc = "The bearer's voice becomes really awful!"
 	points = 5
 
-/datum/hag_boon/trait/curse/awful_voice/apply_boon_effect(mob/living/L)
+/datum/hag_boon/curse/awful_voice/apply_boon_effect(mob/living/L)
 	RegisterSignal(L, COMSIG_MOB_SAY, PROC_REF(handle_speech))
-	..()
 
-/datum/hag_boon/trait/curse/awful_voice/remove_boon_effect(mob/living/L)
+/datum/hag_boon/curse/awful_voice/remove_boon_effect(mob/living/L)
 	UnregisterSignal(L, COMSIG_MOB_SAY)
-	..()
 
-/datum/hag_boon/trait/curse/awful_voice/proc/handle_speech(datum/source, list/speech_args)
+/datum/hag_boon/curse/awful_voice/proc/handle_speech(datum/source, list/speech_args)
 	speech_args[SPEECH_SPANS] |= SPAN_SANS
 
 // Traits
