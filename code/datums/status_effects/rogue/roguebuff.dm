@@ -1628,7 +1628,7 @@
 /datum/status_effect/buff/clash/proc/guard_disrupted_swaphand()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.bad_guard("My focus was disrupted!", FALSE, 25)
+		H.bad_guard("My focus was disrupted!", FALSE, 26)
 
 // TA ADDITION END
 
