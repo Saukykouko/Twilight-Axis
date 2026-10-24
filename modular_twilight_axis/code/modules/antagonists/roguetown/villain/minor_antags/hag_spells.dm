@@ -184,6 +184,39 @@
 /datum/hag_boon/curse/awful_voice/proc/handle_speech(datum/source, list/speech_args)
 	speech_args[SPEECH_SPANS] |= SPAN_SANS
 
+/datum/hag_boon/curse/excommunicated
+	name = "Excommunication"
+	desc = "The bearer will become excommunicated without chance to mend it."
+	points = 30
+
+/datum/hag_boon/curse/excommunicated/apply_boon_effect(mob/living/L)
+	var/mob/living/carbon/human/H = L
+	GLOB.excommunicated_players += H
+	ADD_TRAIT(H, TRAIT_EXCOMMUNICATED, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NORECONCILE, TRAIT_GENERIC)
+	to_chat(H, span_notice("You have been excommunicated from the Church of the Ten."))
+	if(H.patron)
+		if(istype(H.patron, /datum/patron/divine))
+			H.add_stress(/datum/stressevent/excommunicated)
+			H.apply_status_effect(/datum/status_effect/debuff/excomm)
+			priority_announce("[H.patron.name] has excommunicated [H.real_name]! SHAME!", title = "EXCOMMUNICATION", sound = 'sound/misc/excomm.ogg')
+		else
+			priority_announce("Astrata has excommunicated [H.real_name]! SHAME!", title = "EXCOMMUNICATION", sound = 'sound/misc/excomm.ogg')
+
+/datum/hag_boon/curse/excommunicated/remove_boon_effect(mob/living/L)
+	var/mob/living/carbon/human/H = L
+	GLOB.excommunicated_players -= H
+	REMOVE_TRAIT(H, TRAIT_EXCOMMUNICATED, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_NORECONCILE, TRAIT_GENERIC)
+	to_chat(H, span_notice("You have been reconciled with the Church of the Ten."))
+	if(H.patron)
+		if(istype(H.patron, /datum/patron/divine))
+			H.remove_stress(/datum/stressevent/excommunicated)
+			H.remove_status_effect(/datum/status_effect/debuff/excomm)
+			priority_announce("[H.patron.name] has reconciled [H.real_name] with the Church. They are once again part of the flock!", title = "RECONCILIATION", sound = 'sound/misc/bell.ogg')
+		else
+			priority_announce("Astrata has reconciled [H.real_name] with the Church. They are once again part of the flock!", title = "RECONCILIATION", sound = 'sound/misc/bell.ogg')
+
 // Traits
 /datum/hag_boon/trait/no_hunger
 	name = "Trait - Foodless"

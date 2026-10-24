@@ -24,6 +24,7 @@
 		// TA ADDITION START
 		/datum/hag_boon/curse/awful_voice = list("cost" = 5, "min_tier" = 1),
 		/datum/hag_boon/trait/curse/vegan = list("cost" = 15, "min_tier" = 1),
+		/datum/hag_boon/curse/excommunicated = list("cost" = 30, "min_tier" = 1),
 		// TA ADDITION END
 		/datum/hag_boon/buff/curse/choking_moss = list("cost" = 40, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/waterlogged = list("cost" = 25, "min_tier" = 1),
