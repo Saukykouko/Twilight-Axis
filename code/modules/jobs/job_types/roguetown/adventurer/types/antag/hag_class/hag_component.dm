@@ -118,6 +118,7 @@
 	if(victim && HAS_TRAIT(victim, TRAIT_FEYTOUCHED))
 		B.transmutable = FALSE // you can't curse your feytouched for ez levelups
 	// TA EDIT END
+	var/list/name_list = boon_registry[true_name]
 	name_list += B
 
 	return B
