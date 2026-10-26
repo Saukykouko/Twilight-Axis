@@ -34,6 +34,11 @@
 	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/swampdust = 1)
 	craftdiff = 6
 
+/datum/crafting_recipe/roguetown/alchemy/hag/rage_moss
+	name = "moss rage"
+	result = list(/obj/item/alch/hag_moss/enchanted/rage = 1)
+	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/natural/thorn = 1)
+
 // Moss
 /obj/item/alch/hag_moss/enchanted/vibrant
 	name = "Vibrant Moss"
@@ -64,6 +69,12 @@
 	boon_path = /datum/hag_boon/buff/arcyne_affinity
 	desc = "This moss is strange, touching it makes you feel closer to arcyne, music and devotee..."
 	color = "#43589e"
+
+/obj/item/alch/hag_moss/enchanted/rage
+	name = "Rage Moss"
+	boon_path = /datum/hag_boon/spell/berserker_rage
+	desc = "This moss is RED, filled with RAGE and BLOOD. Touching this makes you EVIL!"
+	color = "#ff0000"
 
 /obj/item/alch/hag_moss/enchanted/secret/Initialize(mapload)
 	. = ..()

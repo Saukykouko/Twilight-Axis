@@ -150,3 +150,9 @@
 	desc = "Allows bearer to bless crops as druid does."
 	spell_type = /obj/effect/proc_holder/spell/targeted/blesscrop
 	points = 50
+
+/datum/hag_boon/spell/berserker_rage
+	name = "Boon of berserker rage"
+	desc = "Grants bearer a berkerker's rage, allowing it to become stronger."
+	spell_type = /obj/effect/proc_holder/spell/self/rage
+	points = 75
