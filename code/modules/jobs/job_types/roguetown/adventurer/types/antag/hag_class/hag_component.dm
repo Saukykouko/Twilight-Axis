@@ -35,6 +35,7 @@
 		// TA ADDITION START
 		/datum/hag_boon/trait/curse/sleepless = list("cost" = 50, "min_tier" = 1),
 		/datum/hag_boon/trait/curse/atheism = list("cost" = 50, "min_tier" = 1),
+		// TA ADDITION END
 		// Trait Curses - Tier 2 (51 - 75 points)
 		/datum/hag_boon/trait/curse/no_run = list("cost" = 60, "min_tier" = 2),
 		// TA ADDITION START
