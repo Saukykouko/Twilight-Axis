@@ -43,3 +43,9 @@
 /datum/hag_boon/trait/noble/apply_boon_effect(mob/living/L)
 	ADD_TRAIT(L, TRAIT_NOBLE_UNLANDED, TRAIT_HAG_BOON)
 	..()
+
+/datum/hag_boon/trait/regeneration
+	name = "Trait - Regeneration"
+	trait_to_apply = TRAIT_REGENERATION
+	desc = "The bearer will start to regenerate - especially near the campfire. This regeneration will be enough to restore the lost limb, if sleeping..."
+	points = 85
