@@ -14,7 +14,19 @@
 	name = "Trait - Pacifist"
 	trait_to_apply = TRAIT_PACIFISM
 	desc = "The bearer becomes a real pacifist."
-	points = 65
+	points = 100
+
+/datum/hag_boon/trait/curse/sleepless
+	name = "Trait - Sleepless"
+	trait_to_apply = TRAIT_NOSLEEP
+	desc = "The bearer will lose the ability to sleep."
+	points = 50
+
+/datum/hag_boon/trait/curse/atheism
+	name = "Trait - Atheism Curse"
+	trait_to_apply = TRAIT_ATHEISM_CURSE
+	desc = "The bearer will be never affected by miracles, even positive one. The bearer WILL NOT BECOME ATHEIST."
+	points = 50
 
 /datum/hag_boon/curse/awful_voice
 	name = "Trait - Awful Voice"
