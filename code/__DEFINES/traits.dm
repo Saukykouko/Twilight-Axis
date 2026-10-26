@@ -840,7 +840,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
 	TRAIT_ZIZOEYES = span_notice("You no longer fear a veil of the darkness, yet your eyes are glimmering lights in it.."),
 	TRAIT_NOC_LIGHT_BLESSING = span_notice("Нок благославила меня на существование под её светом."),
-	TRAIT_OUTLANDER = span_info("The locals see me as not of their land.")
+	TRAIT_OUTLANDER = span_info("The locals see me as not of their land."),
 	TRAIT_REGENERATION = span_info("Мое тело постоянно регенерирует, особенно при хорошем отдыхе... Возможно, я даже смогу отрастить утерянную конечность.")
 ))
 

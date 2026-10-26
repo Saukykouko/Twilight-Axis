@@ -68,7 +68,7 @@
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)
 	// TA ADDITION START
-	if(!stat && HAS_TRAIT(owner, TRAIT_REGENERATION))
+	if(!stat && HAS_TRAIT(src, TRAIT_REGENERATION))
 		adjustBruteLoss(-1)
 		adjustFireLoss(-1)
 	// TA ADDITION END
