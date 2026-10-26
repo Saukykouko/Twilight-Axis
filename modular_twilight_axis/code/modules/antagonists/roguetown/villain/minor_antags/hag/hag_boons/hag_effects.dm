@@ -45,8 +45,8 @@
 
 /datum/hag_boon/buff/devotee
 	name = "Devotee"
-	desc = "Bearer gain the lesserest miracles of their god, but if they already has it, their devotee regeneration will be increased."
-	points = 40
+	desc = "Bearer gain the miracles of their god, but if they already has it, their devotee regeneration will be increased."
+	points = 60
 	status_type = /datum/status_effect/buff/hag_boon/devotee
 
 /datum/status_effect/buff/hag_boon/devotee
@@ -58,17 +58,20 @@
 	H.adjust_skillrank_up_to(/datum/skill/magic/holy, 4, TRUE)
 	if(!H.devotion)
 		var/datum/devotion/new_faith = new /datum/devotion(H, H.patron)
-		new_faith.grant_miracles(H, cleric_tier = CLERIC_T0, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = (CLERIC_REQ_1))
-	else
+		new_faith.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = (CLERIC_REQ_1))
+	else if(H.devotion.level < CLERIC_T1)
 		var/datum/devotion/our_faith = H.devotion
-		our_faith.passive_devotion_gain += CLERIC_REGEN_WEAK
+		our_faith.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = (CLERIC_REQ_1))
+	else if(H.devotion.level >= CLERIC_T1)
+		var/datum/devotion/our_faith = H.devotion
+		our_faith.passive_devotion_gain += CLERIC_REGEN_MINOR
 		START_PROCESSING(SSobj, our_faith)
 	return
 
 /datum/hag_boon/buff/arcyne_affinity
 	name = "Arcyne Affinity"
 	desc = "Bearer gain the arcyne potencial and learn some spells!"
-	points = 65
+	points = 60
 	status_type = /datum/status_effect/buff/hag_boon/arcyne_affinity
 
 /datum/status_effect/buff/hag_boon/arcyne_affinity
@@ -82,11 +85,11 @@
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/touch/prestidigitation)
 			ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
 			if(!LAZYLEN(H.mind.mage_aspect_config))
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3), grant_attunement = FALSE)
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 8), grant_attunement = FALSE)
 			H.mind.check_learnspell()
 	else
-		H.mind.mage_aspect_config["minor"] += 1
-		H.mind.mage_aspect_config["utilities"] += 3
+		H.mind.mage_aspect_config["minor"] += 2
+		H.mind.mage_aspect_config["utilities"] += 8
 		H.mind.check_learnspell()
 	H.adjust_skillrank_up_to(/datum/skill/magic/arcane, 4, TRUE)
 	return

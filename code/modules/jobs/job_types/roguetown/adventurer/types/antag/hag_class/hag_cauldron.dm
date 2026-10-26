@@ -112,6 +112,11 @@
 		/obj/item/clothing/neck/roguetown/chaincoif = /obj/item/hag_catalyst/synth_base,
 		/obj/item/clothing/neck/roguetown/gorget = /obj/item/hag_catalyst/synth_base,
 		/obj/item/clothing/neck/roguetown/leather = /obj/item/hag_catalyst/synth_base,
+		// GILDED ITEMS - RINGS
+		/obj/item/clothing/ring/statonyx = /obj/item/hag_catalyst/synth_base/gilded,
+		/obj/item/clothing/ring/statamythortz = /obj/item/hag_catalyst/synth_base/gilded,
+		/obj/item/clothing/ring/statrontz = /obj/item/hag_catalyst/synth_base/gilded,
+		/obj/item/clothing/ring/statgemerald = /obj/item/hag_catalyst/synth_base/gilded,
 		// TA ADDITION END
 	)
 
