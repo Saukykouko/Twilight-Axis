@@ -106,7 +106,6 @@
 /obj/effect/proc_holder/spell/self/roots_movement
 	name = "Movement of roots"
 	desc = "Move through the roots to someone you know..."
-	invocation_type = INVOCATION_SHOUT
 	recharge_time = 10 MINUTES
 	miracle = FALSE
 	devotion_cost = 0
