@@ -842,7 +842,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_ZIZOEYES = span_notice("You no longer fear a veil of the darkness, yet your eyes are glimmering lights in it.."),
 	TRAIT_NOC_LIGHT_BLESSING = span_notice("Нок благославила меня на существование под её светом."),
 	TRAIT_OUTLANDER = span_info("The locals see me as not of their land."),
-	TRAIT_REGENERATION = span_info("Мое тело постоянно регенерирует, особенно при хорошем отдыхе... Возможно, я даже смогу отрастить утерянную конечность.")
+	TRAIT_REGENERATION = span_info("Мое тело постоянно регенерирует, особенно при хорошем отдыхе... Возможно, я даже смогу отрастить утерянную конечность."),
 	TRAIT_OATHBREAKER = span_bloody("I chose to abandon my servitude to the False Ten and sided with Matthios, Father of Freedom. Tennites across the land know of my 'heresy', but I fear not their wrath, for Matthios grands me arms to slay every tyrant I can reach.")
 ))
 
